@@ -174,3 +174,4 @@ INSERT OR IGNORE INTO settlements (id, group_id, debtor_id, creditor_id, amount,
 ('stl-2', 'group-makan-malam-reuni', 'user-citra-04', 'user-ani-02', 75000.00, 'PENDING', 'Transfer', '2026-10-28 19:00:00'),
 ('stl-3', 'group-makan-malam-reuni', 'user-putri-01', 'user-budi-03', 25000.00, 'COMPLETED', 'QRIS / Transfer BCA', '2026-10-28 20:15:00'),
 ('stl-4', 'group-liburan-jogja', 'user-budi-03', 'user-putri-01', 75000.00, 'COMPLETED', 'QRIS Gopay', '2026-10-27 18:00:00');
+
