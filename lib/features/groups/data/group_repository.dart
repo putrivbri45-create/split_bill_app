@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:uuid/uuid.dart';
 import '../../../core/database/database_service.dart';
 import '../domain/models/group_model.dart';
@@ -165,6 +166,7 @@ class GroupRepositoryImpl implements GroupRepository {
 
   @override
   Future<List<GroupModel>> getGroups({String? userId}) async {
+    final currentUserId = userId ?? 'user-putri-01';
     if (_db.isConfigured) {
       try {
         final res = await _db.query(
@@ -174,19 +176,77 @@ class GroupRepositoryImpl implements GroupRepository {
           final List<GroupModel> groups = [];
           for (final row in res) {
             final gid = row[0].toString();
-            // Fetch members
+
+            // 1. Fetch members with display name and avatar
             final memRes = await _db.executeParams(
-              "SELECT id, group_id, user_id, role, display_name, phone_number FROM group_members WHERE group_id = \$1;",
+              '''
+              SELECT 
+                gm.id, gm.group_id, gm.user_id, gm.role, 
+                COALESCE(gm.display_name, u.full_name, 'Member') AS name, 
+                COALESCE(gm.phone_number, u.phone_number),
+                u.avatar_url
+              FROM group_members gm
+              LEFT JOIN users u ON gm.user_id = u.id
+              WHERE gm.group_id = \$1;
+              ''',
               [gid],
             );
-            final members = memRes.map((m) => GroupMemberModel(
-              id: m[0].toString(),
-              groupId: m[1].toString(),
-              userId: m[2].toString(),
-              role: m[3]?.toString() ?? 'member',
-              userName: m[4]?.toString() ?? 'Member',
-              phoneNumber: m[5]?.toString(),
-            )).toList();
+
+            // 2. Fetch total spending and expense count from expenses table
+            final expStats = await _db.executeParams(
+              "SELECT COUNT(*), COALESCE(SUM(total_amount), 0.0) FROM expenses WHERE group_id = \$1;",
+              [gid],
+            );
+            final int expCount = expStats.isNotEmpty ? int.tryParse(expStats.first[0]?.toString() ?? '0') ?? 0 : 0;
+            final double totalSpending = expStats.isNotEmpty ? double.tryParse(expStats.first[1]?.toString() ?? '0') ?? 0.0 : 0.0;
+
+            // 3. Compute net balances for members:
+            final paidRes = await _db.executeParams(
+              "SELECT payer_id, COALESCE(SUM(total_amount), 0.0) FROM expenses WHERE group_id = \$1 GROUP BY payer_id;",
+              [gid],
+            );
+            final Map<String, double> paidMap = {
+              for (final r in paidRes) r[0].toString(): double.tryParse(r[1]?.toString() ?? '0') ?? 0.0
+            };
+
+            final owedRes = await _db.executeParams(
+              '''
+              SELECT s.user_id, COALESCE(SUM(s.amount_owed), 0.0) 
+              FROM expense_splits s 
+              JOIN expenses e ON s.expense_id = e.id 
+              WHERE e.group_id = \$1 AND (s.is_settled = 0 OR s.is_settled IS NULL)
+              GROUP BY s.user_id;
+              ''',
+              [gid],
+            );
+            final Map<String, double> owedMap = {
+              for (final r in owedRes) r[0].toString(): double.tryParse(r[1]?.toString() ?? '0') ?? 0.0
+            };
+
+            final members = memRes.map((m) {
+              final uid = m[2].toString();
+              final paid = paidMap[uid] ?? 0.0;
+              final owed = owedMap[uid] ?? 0.0;
+              final net = paid - owed;
+
+              return GroupMemberModel(
+                id: m[0].toString(),
+                groupId: m[1].toString(),
+                userId: uid,
+                role: m[3]?.toString() ?? 'member',
+                userName: m[4]?.toString() ?? 'Member',
+                phoneNumber: m[5]?.toString(),
+                avatarUrl: m[6]?.toString(),
+                netBalance: net,
+              );
+            }).toList();
+
+            // 4. Current user debt and credit for this group
+            final userPaid = paidMap[currentUserId] ?? 0.0;
+            final userOwed = owedMap[currentUserId] ?? 0.0;
+            final userNet = userPaid - userOwed;
+            final double userCredit = userNet > 0 ? userNet : 0.0;
+            final double userDebt = userNet < 0 ? -userNet : 0.0;
 
             groups.add(GroupModel(
               id: gid,
@@ -197,13 +257,19 @@ class GroupRepositoryImpl implements GroupRepository {
               createdAt: row[5] != null ? DateTime.tryParse(row[5].toString()) ?? DateTime.now() : DateTime.now(),
               description: row[6]?.toString(),
               memberCount: members.length,
+              expenseCount: expCount,
+              totalSpending: totalSpending,
+              userDebt: userDebt,
+              userCredit: userCredit,
               members: members,
             ));
           }
           return groups;
+        } else {
+          return [];
         }
-      } catch (_) {
-        // Fallback to local
+      } catch (e) {
+        debugPrint('Error getting groups from SQLite: $e');
       }
     }
     return List.from(_mockGroups);

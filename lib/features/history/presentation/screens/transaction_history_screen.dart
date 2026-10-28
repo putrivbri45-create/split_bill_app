@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../config/theme.dart';
 import '../../../../core/utils/currency_formatter.dart';
+import '../../../expenses/data/expense_repository.dart';
+import '../../../settlements/data/settlement_repository.dart';
 
 class TransactionHistoryScreen extends StatefulWidget {
   const TransactionHistoryScreen({super.key});
@@ -12,57 +15,14 @@ class TransactionHistoryScreen extends StatefulWidget {
 class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
   final TextEditingController _searchController = TextEditingController();
   String _selectedFilter = 'Semua';
+  bool _isLoading = true;
+  List<Map<String, dynamic>> _transactions = [];
 
-  final List<Map<String, dynamic>> _septemberTransactions = [
-    {
-      'title': 'Makan Malam Reuni',
-      'subtitle': 'Grup Makan Malam Reuni • Hari ini, 19:30',
-      'badge': 'Kamu bayar Rp50.000',
-      'amount': -50000.0,
-      'isExpense': true,
-      'category': 'makanan',
-      'icon': Icons.restaurant_rounded,
-    },
-    {
-      'title': 'Liburan Jogja',
-      'subtitle': 'Tiket Kereta PP • Kemarin, 14:15',
-      'badge': 'Pelunasan dari Budi',
-      'amount': 75000.0,
-      'isExpense': false,
-      'category': 'liburan',
-      'icon': Icons.flight_takeoff_rounded,
-    },
-    {
-      'title': 'Parkir & Tips',
-      'subtitle': 'Grup Makan Malam Reuni • 24 Sep, 21:00',
-      'badge': 'Bagian kamu: Rp7.500 (1/4)',
-      'amount': -7500.0,
-      'isExpense': true,
-      'category': 'transport',
-      'icon': Icons.local_parking_rounded,
-    },
-    {
-      'title': 'Bensin & Tol',
-      'subtitle': 'Grup Liburan Jogja • 22 Sep, 08:30',
-      'badge': 'Dibayarkan oleh Dian',
-      'amount': -35000.0,
-      'isExpense': true,
-      'category': 'transport',
-      'icon': Icons.ev_station_rounded,
-    },
-  ];
-
-  final List<Map<String, dynamic>> _augustTransactions = [
-    {
-      'title': 'Kost Bulanan & Wifi',
-      'subtitle': 'Grup Kontrakan Ceria • 15 Agu, 10:00',
-      'badge': 'Lunas dari 3 anggota',
-      'amount': 150000.0,
-      'isExpense': false,
-      'category': 'rumah',
-      'icon': Icons.home_rounded,
-    },
-  ];
+  @override
+  void initState() {
+    super.initState();
+    _loadData();
+  }
 
   @override
   void dispose() {
@@ -70,10 +30,141 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
     super.dispose();
   }
 
+  Future<void> _loadData() async {
+    setState(() => _isLoading = true);
+    try {
+      final expenseRepo = RepositoryProvider.of<ExpenseRepository>(context);
+      final settlementRepo = RepositoryProvider.of<SettlementRepository>(context);
+
+      final expenses = await expenseRepo.getAllExpenses();
+      final settlements = await settlementRepo.getAllSettlements();
+
+      final List<Map<String, dynamic>> list = [];
+
+      for (final e in expenses) {
+        IconData icon = Icons.receipt_rounded;
+        final cat = e.category.toLowerCase();
+        if (cat.contains('makan')) {
+          icon = Icons.restaurant_rounded;
+        } else if (cat.contains('trans') || cat.contains('bensin') || cat.contains('tol') || cat.contains('kereta') || cat.contains('parkir')) {
+          icon = Icons.directions_car_rounded;
+        } else if (cat.contains('libur') || cat.contains('tiket') || cat.contains('wisata')) {
+          icon = Icons.flight_takeoff_rounded;
+        } else if (cat.contains('kost') || cat.contains('wifi') || cat.contains('rumah')) {
+          icon = Icons.home_rounded;
+        }
+
+        final isPayerPutri = e.payerId == 'user-putri-01' || e.payerName.toLowerCase().contains('putri');
+        final badge = isPayerPutri
+            ? 'Kamu bayar ${CurrencyFormatter.format(e.totalAmount)}'
+            : 'Dibayar oleh ${e.payerName}';
+
+        list.add({
+          'id': e.id,
+          'title': e.title,
+          'subtitle': '${e.category} • ${_formatDateTime(e.expenseDate)}',
+          'badge': badge,
+          'amount': -e.totalAmount,
+          'isExpense': true,
+          'category': e.category,
+          'icon': icon,
+          'date': e.expenseDate,
+        });
+      }
+
+      for (final s in settlements) {
+        list.add({
+          'id': s.id,
+          'title': 'Pelunasan dari ${s.debtorName}',
+          'subtitle': 'Kepada ${s.creditorName} • ${_formatDateTime(s.settledAt)}',
+          'badge': s.status == 'COMPLETED' ? 'Lunas (${s.method ?? "Transfer"})' : 'Menunggu Pelunasan',
+          'amount': s.amount,
+          'isExpense': false,
+          'category': 'pelunasan',
+          'icon': Icons.payments_rounded,
+          'date': s.settledAt,
+        });
+      }
+
+      list.sort((a, b) => (b['date'] as DateTime).compareTo(a['date'] as DateTime));
+
+      if (mounted) {
+        setState(() {
+          _transactions = list;
+          _isLoading = false;
+        });
+      }
+    } catch (_) {
+      if (mounted) {
+        setState(() => _isLoading = false);
+      }
+    }
+  }
+
+  String _formatDateTime(DateTime dt) {
+    const months = [
+      'Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun',
+      'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'
+    ];
+    final minuteStr = dt.minute.toString().padLeft(2, '0');
+    final hourStr = dt.hour.toString().padLeft(2, '0');
+    return '${dt.day} ${months[dt.month - 1]}, $hourStr:$minuteStr';
+  }
+
+  String _formatMonthYear(DateTime dt) {
+    const months = [
+      'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni',
+      'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'
+    ];
+    return '${months[dt.month - 1]} ${dt.year}';
+  }
+
+  List<Map<String, dynamic>> _getFilteredTransactions() {
+    final query = _searchController.text.trim().toLowerCase();
+    return _transactions.where((tx) {
+      if (query.isNotEmpty) {
+        final title = (tx['title'] as String).toLowerCase();
+        final subtitle = (tx['subtitle'] as String).toLowerCase();
+        if (!title.contains(query) && !subtitle.contains(query)) {
+          return false;
+        }
+      }
+
+      if (_selectedFilter == 'Pengeluaran' && !tx['isExpense']) {
+        return false;
+      }
+      if (_selectedFilter == 'Pelunasan' && tx['isExpense']) {
+        return false;
+      }
+
+      return true;
+    }).toList();
+  }
+
   @override
   Widget build(BuildContext context) {
     final palette = context.palette;
     final isDark = context.isDark;
+
+    final filtered = _getFilteredTransactions();
+
+    double totalExpense = 0.0;
+    double totalIncome = 0.0;
+    for (final tx in _transactions) {
+      final amount = tx['amount'] as double;
+      if (tx['isExpense'] == true) {
+        totalExpense += amount.abs();
+      } else {
+        totalIncome += amount;
+      }
+    }
+
+    // Group filtered items by Month & Year
+    final Map<String, List<Map<String, dynamic>>> grouped = {};
+    for (final tx in filtered) {
+      final key = _formatMonthYear(tx['date'] as DateTime);
+      grouped.putIfAbsent(key, () => []).add(tx);
+    }
 
     return Scaffold(
       appBar: AppBar(
@@ -84,222 +175,233 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
             color: palette.onSurface,
           ),
         ),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.refresh_rounded),
+            onPressed: _loadData,
+            tooltip: 'Perbarui Data',
+          ),
+        ],
       ),
       body: SafeArea(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Search Bar
-              TextField(
-                controller: _searchController,
-                decoration: InputDecoration(
-                  hintText: 'Cari transaksi atau nama grup...',
-                  prefixIcon: const Icon(Icons.search_rounded),
-                  suffixIcon: IconButton(
-                    icon: const Icon(Icons.tune_rounded),
-                    onPressed: () {},
+        child: RefreshIndicator(
+          onRefresh: _loadData,
+          child: SingleChildScrollView(
+            physics: const AlwaysScrollableScrollPhysics(),
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Search Bar
+                TextField(
+                  controller: _searchController,
+                  decoration: InputDecoration(
+                    hintText: 'Cari transaksi atau nama grup...',
+                    prefixIcon: const Icon(Icons.search_rounded),
+                    suffixIcon: _searchController.text.isNotEmpty
+                        ? IconButton(
+                            icon: const Icon(Icons.clear_rounded),
+                            onPressed: () {
+                              _searchController.clear();
+                              setState(() {});
+                            },
+                          )
+                        : null,
+                  ),
+                  onChanged: (_) => setState(() {}),
+                ),
+
+                const SizedBox(height: 12),
+
+                // Filter Chips
+                SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Row(
+                    children: [
+                      _buildFilterChip('Semua', palette),
+                      const SizedBox(width: 8),
+                      _buildFilterChip('Pengeluaran', palette),
+                      const SizedBox(width: 8),
+                      _buildFilterChip('Pelunasan', palette),
+                    ],
                   ),
                 ),
-                onChanged: (_) => setState(() {}),
-              ),
 
-              const SizedBox(height: 12),
+                const SizedBox(height: 16),
 
-              // Filter Chips
-              Row(
-                children: [
-                  GestureDetector(
-                    onTap: () => setState(() => _selectedFilter = 'Semua'),
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                      decoration: BoxDecoration(
-                        color: _selectedFilter == 'Semua' ? AppColors.primaryContainer : palette.surfaceLow,
-                        borderRadius: BorderRadius.circular(AppRadius.pill),
-                      ),
-                      child: Row(
-                        children: [
-                          Text(
-                            'Semua',
-                            style: AppText.labelSm.copyWith(
-                              color: _selectedFilter == 'Semua' ? Colors.white : palette.onSurfaceVariant,
-                              fontWeight: FontWeight.bold,
+                // Summary Cards Row
+                Row(
+                  children: [
+                    Expanded(
+                      child: Container(
+                        padding: const EdgeInsets.all(16),
+                        decoration: BoxDecoration(
+                          color: palette.card,
+                          borderRadius: BorderRadius.circular(20),
+                          border: Border.all(color: palette.cardBorder),
+                          boxShadow: AppShadows.card,
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              children: [
+                                const Icon(Icons.north_east_rounded, size: 14, color: AppColors.error),
+                                const SizedBox(width: 4),
+                                Text('Total Pengeluaran', style: AppText.bodySm.copyWith(fontSize: 11)),
+                              ],
                             ),
-                          ),
-                          if (_selectedFilter == 'Semua') ...[
-                            const SizedBox(width: 4),
-                            Container(width: 6, height: 6, decoration: const BoxDecoration(color: Colors.white, shape: BoxShape.circle)),
+                            const SizedBox(height: 6),
+                            Text(
+                              '-${CurrencyFormatter.format(totalExpense)}',
+                              style: AppText.headlineSm.copyWith(
+                                fontWeight: FontWeight.w800,
+                                color: isDark ? const Color(0xFFFFB4AB) : const Color(0xFFC53030),
+                              ),
+                            ),
                           ],
-                        ],
+                        ),
                       ),
                     ),
-                  ),
-                ],
-              ),
-
-              const SizedBox(height: 16),
-
-              // Summary Cards Row
-              Row(
-                children: [
-                  Expanded(
-                    child: Container(
-                      padding: const EdgeInsets.all(16),
-                      decoration: BoxDecoration(
-                        color: palette.card,
-                        borderRadius: BorderRadius.circular(20),
-                        border: Border.all(color: palette.cardBorder),
-                        boxShadow: AppShadows.card,
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            children: [
-                              Icon(Icons.north_east_rounded, size: 14, color: AppColors.error),
-                              const SizedBox(width: 4),
-                              Text('Total Pengeluaran', style: AppText.bodySm.copyWith(fontSize: 11)),
-                            ],
-                          ),
-                          const SizedBox(height: 6),
-                          Text(
-                            '-Rp92.500',
-                            style: AppText.headlineSm.copyWith(
-                              fontWeight: FontWeight.w800,
-                              color: isDark ? const Color(0xFFFFB4AB) : const Color(0xFFC53030),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: Container(
-                      padding: const EdgeInsets.all(16),
-                      decoration: BoxDecoration(
-                        color: palette.card,
-                        borderRadius: BorderRadius.circular(20),
-                        border: Border.all(color: palette.cardBorder),
-                        boxShadow: AppShadows.card,
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            children: [
-                              const Icon(Icons.check_rounded, size: 14, color: Color(0xFF10B981)),
-                              const SizedBox(width: 4),
-                              Text('Diterima / Lunas', style: AppText.bodySm.copyWith(fontSize: 11)),
-                            ],
-                          ),
-                          const SizedBox(height: 6),
-                          Text(
-                            '+Rp225.000',
-                            style: AppText.headlineSm.copyWith(
-                              fontWeight: FontWeight.w800,
-                              color: const Color(0xFF10B981),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-
-              const SizedBox(height: 24),
-
-              // September 2026 Section
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    'September 2026',
-                    style: AppText.headlineSm.copyWith(
-                      fontWeight: FontWeight.w800,
-                      color: palette.onSurface,
-                      fontSize: 16,
-                    ),
-                  ),
-                  Row(
-                    children: [
-                      Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: Container(
+                        padding: const EdgeInsets.all(16),
                         decoration: BoxDecoration(
-                          color: palette.surfaceLow,
-                          borderRadius: BorderRadius.circular(AppRadius.pill),
+                          color: palette.card,
+                          borderRadius: BorderRadius.circular(20),
+                          border: Border.all(color: palette.cardBorder),
+                          boxShadow: AppShadows.card,
                         ),
-                        child: Text(
-                          '4 transaksi',
-                          style: AppText.labelSm.copyWith(fontSize: 10, color: palette.onSurfaceVariant),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              children: [
+                                const Icon(Icons.check_rounded, size: 14, color: Color(0xFF10B981)),
+                                const SizedBox(width: 4),
+                                Text('Diterima / Lunas', style: AppText.bodySm.copyWith(fontSize: 11)),
+                              ],
+                            ),
+                            const SizedBox(height: 6),
+                            Text(
+                              '+${CurrencyFormatter.format(totalIncome)}',
+                              style: AppText.headlineSm.copyWith(
+                                fontWeight: FontWeight.w800,
+                                color: const Color(0xFF10B981),
+                              ),
+                            ),
+                          ],
                         ),
                       ),
-                      const SizedBox(width: 8),
-                      Text(
-                        'Net +Rp22.500',
-                        style: AppText.labelSm.copyWith(
-                          color: palette.onSurfaceVariant,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-              const SizedBox(height: 12),
+                    ),
+                  ],
+                ),
 
-              // September items
-              ..._septemberTransactions.map((tx) => _buildTransactionCard(tx, palette, isDark)),
+                const SizedBox(height: 24),
 
-              const SizedBox(height: 20),
-
-              // August 2026 Section
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    'Agustus 2026',
-                    style: AppText.headlineSm.copyWith(
-                      fontWeight: FontWeight.w800,
-                      color: palette.onSurface,
-                      fontSize: 16,
+                if (_isLoading) ...[
+                  const Center(
+                    child: Padding(
+                      padding: EdgeInsets.all(40),
+                      child: CircularProgressIndicator(),
                     ),
                   ),
-                  Row(
-                    children: [
-                      Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-                        decoration: BoxDecoration(
-                          color: palette.surfaceLow,
-                          borderRadius: BorderRadius.circular(AppRadius.pill),
+                ] else if (filtered.isEmpty) ...[
+                  Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.all(32),
+                    decoration: BoxDecoration(
+                      color: palette.card,
+                      borderRadius: BorderRadius.circular(20),
+                      border: Border.all(color: palette.cardBorder),
+                    ),
+                    child: Column(
+                      children: [
+                        Icon(Icons.receipt_long_outlined, size: 48, color: palette.outline),
+                        const SizedBox(height: 12),
+                        Text(
+                          'Belum ada transaksi',
+                          style: AppText.titleMedium.copyWith(
+                            fontWeight: FontWeight.bold,
+                            color: palette.onSurface,
+                          ),
                         ),
-                        child: Text(
-                          '1 transaksi',
-                          style: AppText.labelSm.copyWith(fontSize: 10, color: palette.onSurfaceVariant),
+                        const SizedBox(height: 4),
+                        Text(
+                          'Catat pengeluaran baru untuk melihat riwayat patungan.',
+                          style: AppText.bodySm.copyWith(color: palette.onSurfaceVariant),
+                          textAlign: TextAlign.center,
                         ),
-                      ),
-                      const SizedBox(width: 8),
-                      Text(
-                        'Net +Rp150.000',
-                        style: AppText.labelSm.copyWith(
-                          color: palette.onSurfaceVariant,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
+                ] else ...[
+                  // Dynamic Month Sections
+                  for (final entry in grouped.entries) ...[
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          entry.key,
+                          style: AppText.headlineSm.copyWith(
+                            fontWeight: FontWeight.w800,
+                            color: palette.onSurface,
+                            fontSize: 16,
+                          ),
+                        ),
+                        Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                          decoration: BoxDecoration(
+                            color: palette.surfaceLow,
+                            borderRadius: BorderRadius.circular(AppRadius.pill),
+                          ),
+                          child: Text(
+                            '${entry.value.length} transaksi',
+                            style: AppText.labelSm.copyWith(fontSize: 10, color: palette.onSurfaceVariant),
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 12),
+                    ...entry.value.map((tx) => _buildTransactionCard(tx, palette, isDark)),
+                    const SizedBox(height: 20),
+                  ],
                 ],
-              ),
-              const SizedBox(height: 12),
 
-              // August items
-              ..._augustTransactions.map((tx) => _buildTransactionCard(tx, palette, isDark)),
-
-              const SizedBox(height: 30),
-            ],
+                const SizedBox(height: 20),
+              ],
+            ),
           ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildFilterChip(String label, AppPalette palette) {
+    final isSelected = _selectedFilter == label;
+    return GestureDetector(
+      onTap: () => setState(() => _selectedFilter = label),
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        decoration: BoxDecoration(
+          color: isSelected ? AppColors.primaryContainer : palette.surfaceLow,
+          borderRadius: BorderRadius.circular(AppRadius.pill),
+        ),
+        child: Row(
+          children: [
+            Text(
+              label,
+              style: AppText.labelSm.copyWith(
+                color: isSelected ? Colors.white : palette.onSurfaceVariant,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            if (isSelected) ...[
+              const SizedBox(width: 4),
+              Container(width: 6, height: 6, decoration: const BoxDecoration(color: Colors.white, shape: BoxShape.circle)),
+            ],
+          ],
         ),
       ),
     );

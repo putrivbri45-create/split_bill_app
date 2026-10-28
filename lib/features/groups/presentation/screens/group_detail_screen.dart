@@ -27,7 +27,7 @@ class _GroupDetailScreenState extends State<GroupDetailScreen> {
     context.read<ExpenseBloc>().add(LoadGroupExpensesEvent(widget.group.id));
   }
 
-  Future<void> _confirmDeleteGroup(BuildContext context) async {
+  Future<void> _confirmDeleteGroup() async {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final confirmed = await showDialog<bool>(
       context: context,
@@ -76,17 +76,17 @@ class _GroupDetailScreenState extends State<GroupDetailScreen> {
       ),
     );
 
-    if (confirmed == true && mounted) {
-      context.read<GroupBloc>().add(DeleteGroupEvent(widget.group.id));
-      Navigator.pop(context);
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Grup "${widget.group.name}" berhasil dihapus'),
-          behavior: SnackBarBehavior.floating,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-        ),
-      );
-    }
+    if (confirmed != true || !mounted) return;
+
+    context.read<GroupBloc>().add(DeleteGroupEvent(widget.group.id));
+    Navigator.pop(context);
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('Grup "${widget.group.name}" berhasil dihapus'),
+        behavior: SnackBarBehavior.floating,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      ),
+    );
   }
 
   @override
@@ -155,7 +155,7 @@ class _GroupDetailScreenState extends State<GroupDetailScreen> {
             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
             onSelected: (value) {
               if (value == 'delete') {
-                _confirmDeleteGroup(context);
+                _confirmDeleteGroup();
               }
             },
             itemBuilder: (context) => [
@@ -456,48 +456,59 @@ class _GroupDetailScreenState extends State<GroupDetailScreen> {
                           borderRadius: BorderRadius.circular(20),
                           boxShadow: AppShadows.badge,
                         ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
+                        child: BlocBuilder<ExpenseBloc, ExpenseState>(
+                          builder: (context, expState) {
+                            final double currentTotal = expState is ExpenseLoaded
+                                ? expState.totalGroupSpending
+                                : group.totalSpending;
+                            final int currentCount = expState is ExpenseLoaded
+                                ? expState.expenses.length
+                                : group.expenseCount;
+
+                            return Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                Text(
-                                  'Total Pengeluaran Grup',
-                                  style: AppText.bodySm.copyWith(
-                                    color: Colors.white.withOpacity(0.85),
-                                    fontSize: 11,
-                                  ),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      'Total Pengeluaran Grup',
+                                      style: AppText.bodySm.copyWith(
+                                        color: Colors.white.withOpacity(0.85),
+                                        fontSize: 11,
+                                      ),
+                                    ),
+                                    const SizedBox(height: 4),
+                                    Text(
+                                      CurrencyFormatter.format(currentTotal),
+                                      style: AppText.headlineLarge.copyWith(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.w900,
+                                        fontSize: 24,
+                                      ),
+                                    ),
+                                  ],
                                 ),
-                                const SizedBox(height: 4),
-                                Text(
-                                  CurrencyFormatter.format(group.totalSpending > 0 ? group.totalSpending : 400000.0),
-                                  style: AppText.headlineLarge.copyWith(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.w900,
-                                    fontSize: 24,
+                                Container(
+                                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                                  decoration: BoxDecoration(
+                                    color: Colors.white.withOpacity(0.18),
+                                    borderRadius: BorderRadius.circular(AppRadius.pill),
+                                  ),
+                                  child: Row(
+                                    children: [
+                                      const Icon(Icons.receipt_outlined, color: Colors.white, size: 14),
+                                      const SizedBox(width: 4),
+                                      Text(
+                                        '$currentCount Transaksi',
+                                        style: const TextStyle(color: Colors.white, fontSize: 11, fontWeight: FontWeight.bold),
+                                      ),
+                                    ],
                                   ),
                                 ),
                               ],
-                            ),
-                            Container(
-                              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                              decoration: BoxDecoration(
-                                color: Colors.white.withOpacity(0.18),
-                                borderRadius: BorderRadius.circular(AppRadius.pill),
-                              ),
-                              child: Row(
-                                children: [
-                                  const Icon(Icons.receipt_outlined, color: Colors.white, size: 14),
-                                  const SizedBox(width: 4),
-                                  Text(
-                                    '${group.expenseCount > 0 ? group.expenseCount : 4} Transaksi',
-                                    style: const TextStyle(color: Colors.white, fontSize: 11, fontWeight: FontWeight.bold),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ],
+                            );
+                          },
                         ),
                       ),
 
@@ -598,12 +609,16 @@ class _GroupDetailScreenState extends State<GroupDetailScreen> {
                   ),
                   const SizedBox(width: 10),
                   FloatingActionButton(
-                    onPressed: () {
-                      Navigator.pushNamed(
+                    onPressed: () async {
+                      await Navigator.pushNamed(
                         context,
                         AppRoutes.addExpense,
                         arguments: group,
                       );
+                      if (context.mounted) {
+                        context.read<ExpenseBloc>().add(LoadGroupExpensesEvent(widget.group.id));
+                        context.read<GroupBloc>().add(LoadGroupsEvent());
+                      }
                     },
                     backgroundColor: AppColors.primaryContainer,
                     child: const Icon(Icons.add, color: Colors.white, size: 28),

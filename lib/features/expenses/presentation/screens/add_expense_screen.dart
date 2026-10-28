@@ -5,6 +5,7 @@ import '../../../../core/utils/currency_formatter.dart';
 import '../../../../core/algorithm/split_calculator.dart';
 import '../../../../shared/widgets/custom_button.dart';
 import '../bloc/expense_bloc.dart';
+import '../../../groups/presentation/bloc/group_bloc.dart';
 import '../../../groups/domain/models/group_model.dart';
 import '../../domain/models/expense_model.dart';
 
@@ -149,6 +150,7 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
     );
 
     context.read<ExpenseBloc>().add(AddExpenseEvent(expense));
+    context.read<GroupBloc>().add(LoadGroupsEvent());
     Navigator.pop(context);
   }
 

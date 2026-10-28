@@ -27,7 +27,7 @@ class _HomeDashboardScreenState extends State<HomeDashboardScreen> {
     context.read<GroupBloc>().add(LoadGroupsEvent());
   }
 
-  Future<void> _confirmDeleteGroup(BuildContext context, GroupModel group) async {
+  Future<void> _confirmDeleteGroup(GroupModel group) async {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final confirmed = await showDialog<bool>(
       context: context,
@@ -76,16 +76,16 @@ class _HomeDashboardScreenState extends State<HomeDashboardScreen> {
       ),
     );
 
-    if (confirmed == true && mounted) {
-      context.read<GroupBloc>().add(DeleteGroupEvent(group.id));
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Grup "${group.name}" berhasil dihapus'),
-          behavior: SnackBarBehavior.floating,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-        ),
-      );
-    }
+    if (confirmed != true || !mounted) return;
+
+    context.read<GroupBloc>().add(DeleteGroupEvent(group.id));
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('Grup "${group.name}" berhasil dihapus'),
+        behavior: SnackBarBehavior.floating,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      ),
+    );
   }
 
   @override
@@ -307,17 +307,23 @@ class _HomeDashboardScreenState extends State<HomeDashboardScreen> {
                   text: 'Catat Pengeluaran Cepat',
                   icon: Icons.bolt_rounded,
                   variant: ButtonVariant.secondary,
-                  onPressed: () {
+                  onPressed: () async {
                     final groupState = context.read<GroupBloc>().state;
                     if (groupState is GroupLoaded &&
                         groupState.groups.isNotEmpty) {
-                      Navigator.pushNamed(
+                      await Navigator.pushNamed(
                         context,
                         AppRoutes.addExpense,
                         arguments: groupState.groups.first,
                       );
+                      if (context.mounted) {
+                        context.read<GroupBloc>().add(LoadGroupsEvent());
+                      }
                     } else {
-                      Navigator.pushNamed(context, AppRoutes.createGroup);
+                      await Navigator.pushNamed(context, AppRoutes.createGroup);
+                      if (context.mounted) {
+                        context.read<GroupBloc>().add(LoadGroupsEvent());
+                      }
                     }
                   },
                 ),
@@ -418,17 +424,20 @@ class _HomeDashboardScreenState extends State<HomeDashboardScreen> {
                         children: state.groups.map((g) {
                           return GroupCard(
                             group: g,
-                            onTap: () {
+                            onTap: () async {
                               context.read<GroupBloc>().add(
                                 SelectGroupEvent(g.id),
                               );
-                              Navigator.pushNamed(
+                              await Navigator.pushNamed(
                                 context,
                                 AppRoutes.groupDetail,
                                 arguments: g,
                               );
+                              if (context.mounted) {
+                                context.read<GroupBloc>().add(LoadGroupsEvent());
+                              }
                             },
-                            onDelete: () => _confirmDeleteGroup(context, g),
+                            onDelete: () => _confirmDeleteGroup(g),
                           );
                         }).toList(),
                       );

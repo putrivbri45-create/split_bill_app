@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:uuid/uuid.dart';
 import '../../../core/database/database_service.dart';
 import '../domain/models/expense_model.dart';
@@ -128,7 +129,28 @@ class ExpenseRepositoryImpl implements ExpenseRepository {
     if (_db.isConfigured) {
       try {
         final res = await _db.executeParams(
-          "SELECT id, group_id, payer_id, title, total_amount, split_type, tax_amount, service_charge, bill_image_url, expense_date, created_at, category, note FROM expenses WHERE group_id = \$1 ORDER BY expense_date DESC;",
+          '''
+          SELECT 
+            e.id, 
+            e.group_id, 
+            e.payer_id, 
+            COALESCE(u.full_name, m.display_name, 'Ani') AS payer_name,
+            e.title, 
+            e.total_amount, 
+            e.split_type, 
+            e.tax_amount, 
+            e.service_charge, 
+            e.bill_image_url, 
+            e.expense_date, 
+            e.created_at, 
+            e.category, 
+            e.note 
+          FROM expenses e
+          LEFT JOIN users u ON e.payer_id = u.id
+          LEFT JOIN group_members m ON (e.group_id = m.group_id AND e.payer_id = m.user_id)
+          WHERE e.group_id = \$1 
+          ORDER BY e.expense_date DESC;
+          ''',
           [groupId],
         );
         if (res.isNotEmpty) {
@@ -136,44 +158,146 @@ class ExpenseRepositoryImpl implements ExpenseRepository {
           for (final row in res) {
             final expId = row[0].toString();
             final spRes = await _db.executeParams(
-              "SELECT id, expense_id, user_id, amount_owed, is_settled, settled_at FROM expense_splits WHERE expense_id = \$1;",
+              '''
+              SELECT 
+                s.id, 
+                s.expense_id, 
+                s.user_id, 
+                COALESCE(u.full_name, 'Member') AS user_name,
+                s.amount_owed, 
+                s.is_settled, 
+                s.settled_at 
+              FROM expense_splits s
+              LEFT JOIN users u ON s.user_id = u.id
+              WHERE s.expense_id = \$1;
+              ''',
               [expId],
             );
             final splits = spRes.map((s) => ExpenseSplitModel(
               id: s[0].toString(),
               expenseId: s[1].toString(),
               userId: s[2].toString(),
-              userName: 'Member',
-              amountOwed: double.tryParse(s[3]?.toString() ?? '0') ?? 0.0,
-              isSettled: s[4] == true || s[4] == 1 || s[4] == '1' || s[4] == 'true',
+              userName: s[3]?.toString() ?? 'Member',
+              amountOwed: double.tryParse(s[4]?.toString() ?? '0') ?? 0.0,
+              isSettled: s[5] == true || s[5] == 1 || s[5] == '1' || s[5] == 'true',
             )).toList();
 
             list.add(ExpenseModel(
               id: expId,
               groupId: row[1].toString(),
               payerId: row[2]?.toString(),
-              title: row[3].toString(),
-              totalAmount: double.tryParse(row[4]?.toString() ?? '0') ?? 0.0,
-              splitType: row[5]?.toString() ?? 'EQUAL',
-              taxAmount: double.tryParse(row[6]?.toString() ?? '0') ?? 0.0,
-              serviceCharge: double.tryParse(row[7]?.toString() ?? '0') ?? 0.0,
-              billImageUrl: row[8]?.toString(),
-              expenseDate: row[9] != null ? DateTime.tryParse(row[9].toString()) ?? DateTime.now() : DateTime.now(),
-              createdAt: row[10] != null ? DateTime.tryParse(row[10].toString()) ?? DateTime.now() : DateTime.now(),
-              category: row[11]?.toString() ?? 'Makanan & Minuman',
-              note: row[12]?.toString(),
+              payerName: row[3]?.toString() ?? 'Ani',
+              title: row[4].toString(),
+              totalAmount: double.tryParse(row[5]?.toString() ?? '0') ?? 0.0,
+              splitType: row[6]?.toString() ?? 'EQUAL',
+              taxAmount: double.tryParse(row[7]?.toString() ?? '0') ?? 0.0,
+              serviceCharge: double.tryParse(row[8]?.toString() ?? '0') ?? 0.0,
+              billImageUrl: row[9]?.toString(),
+              expenseDate: row[10] != null ? DateTime.tryParse(row[10].toString()) ?? DateTime.now() : DateTime.now(),
+              createdAt: row[11] != null ? DateTime.tryParse(row[11].toString()) ?? DateTime.now() : DateTime.now(),
+              category: row[12]?.toString() ?? 'Makanan & Minuman',
+              note: row[13]?.toString(),
               splits: splits,
             ));
           }
           return list;
+        } else {
+          // If group exists in database but has no expenses yet, return empty list
+          final groupExists = await _db.executeParams(
+            "SELECT id FROM groups WHERE id = \$1 LIMIT 1;",
+            [groupId],
+          );
+          if (groupExists.isNotEmpty) {
+            return [];
+          }
         }
-      } catch (_) {}
+      } catch (e) {
+        debugPrint('Error getting expenses by group: $e');
+      }
     }
     return _mockExpenses.where((e) => e.groupId == groupId).toList();
   }
 
   @override
   Future<List<ExpenseModel>> getAllExpenses() async {
+    if (_db.isConfigured) {
+      try {
+        final res = await _db.query(
+          '''
+          SELECT 
+            e.id, 
+            e.group_id, 
+            e.payer_id, 
+            COALESCE(u.full_name, m.display_name, 'Ani') AS payer_name,
+            e.title, 
+            e.total_amount, 
+            e.split_type, 
+            e.tax_amount, 
+            e.service_charge, 
+            e.bill_image_url, 
+            e.expense_date, 
+            e.created_at, 
+            e.category, 
+            e.note 
+          FROM expenses e
+          LEFT JOIN users u ON e.payer_id = u.id
+          LEFT JOIN group_members m ON (e.group_id = m.group_id AND e.payer_id = m.user_id)
+          ORDER BY e.expense_date DESC;
+          ''',
+        );
+        if (res.isNotEmpty) {
+          final List<ExpenseModel> list = [];
+          for (final row in res) {
+            final expId = row[0].toString();
+            final spRes = await _db.executeParams(
+              '''
+              SELECT 
+                s.id, 
+                s.expense_id, 
+                s.user_id, 
+                COALESCE(u.full_name, 'Member') AS user_name,
+                s.amount_owed, 
+                s.is_settled, 
+                s.settled_at 
+              FROM expense_splits s
+              LEFT JOIN users u ON s.user_id = u.id
+              WHERE s.expense_id = \$1;
+              ''',
+              [expId],
+            );
+            final splits = spRes.map((s) => ExpenseSplitModel(
+              id: s[0].toString(),
+              expenseId: s[1].toString(),
+              userId: s[2].toString(),
+              userName: s[3]?.toString() ?? 'Member',
+              amountOwed: double.tryParse(s[4]?.toString() ?? '0') ?? 0.0,
+              isSettled: s[5] == true || s[5] == 1 || s[5] == '1' || s[5] == 'true',
+            )).toList();
+
+            list.add(ExpenseModel(
+              id: expId,
+              groupId: row[1].toString(),
+              payerId: row[2]?.toString(),
+              payerName: row[3]?.toString() ?? 'Ani',
+              title: row[4].toString(),
+              totalAmount: double.tryParse(row[5]?.toString() ?? '0') ?? 0.0,
+              splitType: row[6]?.toString() ?? 'EQUAL',
+              taxAmount: double.tryParse(row[7]?.toString() ?? '0') ?? 0.0,
+              serviceCharge: double.tryParse(row[8]?.toString() ?? '0') ?? 0.0,
+              billImageUrl: row[9]?.toString(),
+              expenseDate: row[10] != null ? DateTime.tryParse(row[10].toString()) ?? DateTime.now() : DateTime.now(),
+              createdAt: row[11] != null ? DateTime.tryParse(row[11].toString()) ?? DateTime.now() : DateTime.now(),
+              category: row[12]?.toString() ?? 'Makanan & Minuman',
+              note: row[13]?.toString(),
+              splits: splits,
+            ));
+          }
+          return list;
+        }
+      } catch (e) {
+        debugPrint('Error getting all expenses: $e');
+      }
+    }
     return List.from(_mockExpenses);
   }
 
@@ -192,6 +316,8 @@ class ExpenseRepositoryImpl implements ExpenseRepository {
       splits: populatedSplits,
     );
 
+    // Keep memory fallback in sync
+    _mockExpenses.removeWhere((e) => e.id == expId);
     _mockExpenses.insert(0, newExpense);
 
     if (_db.isConfigured) {
@@ -218,10 +344,12 @@ class ExpenseRepositoryImpl implements ExpenseRepository {
         for (final sp in populatedSplits) {
           await _db.executeParams(
             "INSERT INTO expense_splits (id, expense_id, user_id, amount_owed, is_settled) VALUES (\$1, \$2, \$3, \$4, \$5);",
-            [sp.id, expId, sp.userId, sp.amountOwed, sp.isSettled],
+            [sp.id, expId, sp.userId, sp.amountOwed, sp.isSettled ? 1 : 0],
           );
         }
-      } catch (_) {}
+      } catch (e) {
+        debugPrint('Error saving expense to SQLite: $e');
+      }
     }
 
     return newExpense;

@@ -17,7 +17,7 @@ class _GroupsListScreenState extends State<GroupsListScreen> {
   String _selectedCategory = 'Semua';
   final List<String> _categories = ['Semua', 'Makanan', 'Liburan', 'Rumah Tangga', 'Kantor'];
 
-  Future<void> _confirmDeleteGroup(BuildContext context, GroupModel group) async {
+  Future<void> _confirmDeleteGroup(GroupModel group) async {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final confirmed = await showDialog<bool>(
       context: context,
@@ -66,16 +66,16 @@ class _GroupsListScreenState extends State<GroupsListScreen> {
       ),
     );
 
-    if (confirmed == true && mounted) {
-      context.read<GroupBloc>().add(DeleteGroupEvent(group.id));
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Grup "${group.name}" berhasil dihapus'),
-          behavior: SnackBarBehavior.floating,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-        ),
-      );
-    }
+    if (confirmed != true || !mounted) return;
+
+    context.read<GroupBloc>().add(DeleteGroupEvent(group.id));
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('Grup "${group.name}" berhasil dihapus'),
+        behavior: SnackBarBehavior.floating,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      ),
+    );
   }
 
   @override
@@ -170,15 +170,18 @@ class _GroupsListScreenState extends State<GroupsListScreen> {
                         final g = filtered[index];
                         return GroupCard(
                           group: g,
-                          onTap: () {
+                          onTap: () async {
                             context.read<GroupBloc>().add(SelectGroupEvent(g.id));
-                            Navigator.pushNamed(
+                            await Navigator.pushNamed(
                               context,
                               AppRoutes.groupDetail,
                               arguments: g,
                             );
+                            if (context.mounted) {
+                              context.read<GroupBloc>().add(LoadGroupsEvent());
+                            }
                           },
-                          onDelete: () => _confirmDeleteGroup(context, g),
+                          onDelete: () => _confirmDeleteGroup(g),
                         );
                       },
                     );
@@ -192,7 +195,12 @@ class _GroupsListScreenState extends State<GroupsListScreen> {
         ),
       ),
       floatingActionButton: FloatingActionButton.extended(
-        onPressed: () => Navigator.pushNamed(context, AppRoutes.createGroup),
+        onPressed: () async {
+          await Navigator.pushNamed(context, AppRoutes.createGroup);
+          if (context.mounted) {
+            context.read<GroupBloc>().add(LoadGroupsEvent());
+          }
+        },
         backgroundColor: AppColors.primaryContainer,
         icon: const Icon(Icons.add, color: Colors.white),
         label: const Text('Buat Grup', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),

@@ -1,9 +1,8 @@
 import 'dart:async';
-import 'dart:io' show Platform;
+import 'dart:io' show Platform, Directory, File;
 import 'package:flutter/foundation.dart';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
-import 'package:sqflite/sqflite.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 import 'package:sqflite_common_ffi_web/sqflite_ffi_web.dart';
 
@@ -60,19 +59,50 @@ class DatabaseService {
     if (kIsWeb) {
       dbPath = 'split_bill.db';
     } else {
+      String? resolvedPath;
+      // 1. Check if database already exists in documents directory
       try {
         final docsDir = await getApplicationDocumentsDirectory();
-        dbPath = p.join(docsDir.path, 'split_bill.db');
-      } catch (_) {
-        final defaultDir = await getDatabasesPath();
-        dbPath = p.join(defaultDir, 'split_bill.db');
+        final legacyFile = File(p.join(docsDir.path, 'split_bill.db'));
+        if (await legacyFile.exists()) {
+          resolvedPath = legacyFile.path;
+        }
+      } catch (_) {}
+
+      // 2. Prefer application support directory on desktop if no legacy file
+      if (resolvedPath == null) {
+        try {
+          final supportDir = await getApplicationSupportDirectory();
+          final dir = Directory(p.join(supportDir.path, 'split_bill_app'));
+          if (!await dir.exists()) {
+            await dir.create(recursive: true);
+          }
+          resolvedPath = p.join(dir.path, 'split_bill.db');
+        } catch (_) {}
       }
+
+      // 3. Fallbacks for mobile or sandbox environments
+      if (resolvedPath == null) {
+        try {
+          final docsDir = await getApplicationDocumentsDirectory();
+          resolvedPath = p.join(docsDir.path, 'split_bill.db');
+        } catch (_) {
+          final defaultDir = await getDatabasesPath();
+          resolvedPath = p.join(defaultDir, 'split_bill.db');
+        }
+      }
+      dbPath = resolvedPath;
     }
 
     final db = await databaseFactory.openDatabase(
       dbPath,
       options: OpenDatabaseOptions(
         version: 1,
+        onConfigure: (db) async {
+          try {
+            await db.execute('PRAGMA foreign_keys = ON;');
+          } catch (_) {}
+        },
         onCreate: (db, version) async {
           await _createTables(db);
           await _seedInitialData(db);
@@ -305,7 +335,7 @@ class DatabaseService {
     return arg;
   }
 
-  /// Executes a query and returns rows formatted as List<List<dynamic>>.
+  /// Executes a query and returns rows formatted as `List<List<dynamic>>`.
   Future<List<List<dynamic>>> query(
     String sql, {
     List<Object?>? parameters,

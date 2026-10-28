@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:uuid/uuid.dart';
 import '../../../core/database/database_service.dart';
 import '../domain/models/settlement_model.dart';
@@ -67,7 +68,21 @@ class SettlementRepositoryImpl implements SettlementRepository {
     if (_db.isConfigured) {
       try {
         final res = await _db.executeParams(
-          "SELECT id, group_id, debtor_id, creditor_id, amount, proof_image_url, status, settled_at, method FROM settlements WHERE group_id = \$1 ORDER BY settled_at DESC;",
+          '''
+          SELECT 
+            s.id, s.group_id, s.debtor_id, 
+            COALESCE(ud.full_name, md.display_name, 'Debitur') AS debtor_name,
+            s.creditor_id, 
+            COALESCE(uc.full_name, mc.display_name, 'Kreditur') AS creditor_name,
+            s.amount, s.proof_image_url, s.status, s.settled_at, s.method 
+          FROM settlements s
+          LEFT JOIN users ud ON s.debtor_id = ud.id
+          LEFT JOIN group_members md ON (s.group_id = md.group_id AND s.debtor_id = md.user_id)
+          LEFT JOIN users uc ON s.creditor_id = uc.id
+          LEFT JOIN group_members mc ON (s.group_id = mc.group_id AND s.creditor_id = mc.user_id)
+          WHERE s.group_id = \$1 
+          ORDER BY s.settled_at DESC;
+          ''',
           [groupId],
         );
         if (res.isNotEmpty) {
@@ -75,23 +90,66 @@ class SettlementRepositoryImpl implements SettlementRepository {
             id: r[0].toString(),
             groupId: r[1].toString(),
             debtorId: r[2].toString(),
-            debtorName: 'Debitur',
-            creditorId: r[3].toString(),
-            creditorName: 'Kreditur',
-            amount: double.tryParse(r[4]?.toString() ?? '0') ?? 0.0,
-            proofImageUrl: r[5]?.toString(),
-            status: r[6]?.toString() ?? 'COMPLETED',
-            settledAt: r[7] != null ? DateTime.tryParse(r[7].toString()) ?? DateTime.now() : DateTime.now(),
-            method: r[8]?.toString(),
+            debtorName: r[3]?.toString() ?? 'Debitur',
+            creditorId: r[4].toString(),
+            creditorName: r[5]?.toString() ?? 'Kreditur',
+            amount: double.tryParse(r[6]?.toString() ?? '0') ?? 0.0,
+            proofImageUrl: r[7]?.toString(),
+            status: r[8]?.toString() ?? 'COMPLETED',
+            settledAt: r[9] != null ? DateTime.tryParse(r[9].toString()) ?? DateTime.now() : DateTime.now(),
+            method: r[10]?.toString(),
           )).toList();
+        } else {
+          return [];
         }
-      } catch (_) {}
+      } catch (e) {
+        debugPrint('Error getting settlements by group: $e');
+      }
     }
     return _mockSettlements.where((s) => s.groupId == groupId).toList();
   }
 
   @override
   Future<List<SettlementModel>> getAllSettlements() async {
+    if (_db.isConfigured) {
+      try {
+        final res = await _db.query(
+          '''
+          SELECT 
+            s.id, s.group_id, s.debtor_id, 
+            COALESCE(ud.full_name, md.display_name, 'Debitur') AS debtor_name,
+            s.creditor_id, 
+            COALESCE(uc.full_name, mc.display_name, 'Kreditur') AS creditor_name,
+            s.amount, s.proof_image_url, s.status, s.settled_at, s.method 
+          FROM settlements s
+          LEFT JOIN users ud ON s.debtor_id = ud.id
+          LEFT JOIN group_members md ON (s.group_id = md.group_id AND s.debtor_id = md.user_id)
+          LEFT JOIN users uc ON s.creditor_id = uc.id
+          LEFT JOIN group_members mc ON (s.group_id = mc.group_id AND s.creditor_id = mc.user_id)
+          ORDER BY s.settled_at DESC;
+          ''',
+        );
+        if (res.isNotEmpty) {
+          return res.map((r) => SettlementModel(
+            id: r[0].toString(),
+            groupId: r[1].toString(),
+            debtorId: r[2].toString(),
+            debtorName: r[3]?.toString() ?? 'Debitur',
+            creditorId: r[4].toString(),
+            creditorName: r[5]?.toString() ?? 'Kreditur',
+            amount: double.tryParse(r[6]?.toString() ?? '0') ?? 0.0,
+            proofImageUrl: r[7]?.toString(),
+            status: r[8]?.toString() ?? 'COMPLETED',
+            settledAt: r[9] != null ? DateTime.tryParse(r[9].toString()) ?? DateTime.now() : DateTime.now(),
+            method: r[10]?.toString(),
+          )).toList();
+        } else {
+          return [];
+        }
+      } catch (e) {
+        debugPrint('Error getting all settlements: $e');
+      }
+    }
     return List.from(_mockSettlements);
   }
 
