@@ -34,7 +34,7 @@ class GroupRepositoryImpl implements GroupRepository {
       memberCount: 4,
       expenseCount: 6,
       totalSpending: 400000.0,
-      userDebt: 125000.0,
+      userDebt: 0.0,
       userCredit: 0.0,
       description: 'Split bill makan bersama setelah reuni angkatan.',
       members: const [
@@ -201,20 +201,25 @@ class GroupRepositoryImpl implements GroupRepository {
             final double totalSpending = expStats.isNotEmpty ? double.tryParse(expStats.first[1]?.toString() ?? '0') ?? 0.0 : 0.0;
 
             // 3. Compute net balances for members:
+            // Rumus: Saldo anggota = Total pembayaran aktual − Total tanggungan
+            // Saldo = (Uang ditalangi + Pelunasan dikirim) - (Tanggungan splits + Pelunasan diterima)
+
+            // A. Total pembayaran aktual untuk pengeluaran (uang ditalangi)
             final paidRes = await _db.executeParams(
-              "SELECT payer_id, COALESCE(SUM(total_amount), 0.0) FROM expenses WHERE group_id = \$1 GROUP BY payer_id;",
+              "SELECT payer_id, COALESCE(SUM(total_amount), 0.0) FROM expenses WHERE group_id = \$1 AND payer_id IS NOT NULL GROUP BY payer_id;",
               [gid],
             );
             final Map<String, double> paidMap = {
               for (final r in paidRes) r[0].toString(): double.tryParse(r[1]?.toString() ?? '0') ?? 0.0
             };
 
+            // B. Total tanggungan dari pembagian biaya (splits)
             final owedRes = await _db.executeParams(
               '''
               SELECT s.user_id, COALESCE(SUM(s.amount_owed), 0.0) 
               FROM expense_splits s 
               JOIN expenses e ON s.expense_id = e.id 
-              WHERE e.group_id = \$1 AND (s.is_settled = 0 OR s.is_settled IS NULL)
+              WHERE e.group_id = \$1
               GROUP BY s.user_id;
               ''',
               [gid],
@@ -223,11 +228,34 @@ class GroupRepositoryImpl implements GroupRepository {
               for (final r in owedRes) r[0].toString(): double.tryParse(r[1]?.toString() ?? '0') ?? 0.0
             };
 
+            // C. Pelunasan yang sudah dikirim oleh debitur (status COMPLETED)
+            final sentRes = await _db.executeParams(
+              "SELECT debtor_id, COALESCE(SUM(amount), 0.0) FROM settlements WHERE group_id = \$1 AND status = 'COMPLETED' GROUP BY debtor_id;",
+              [gid],
+            );
+            final Map<String, double> sentMap = {
+              for (final r in sentRes) r[0].toString(): double.tryParse(r[1]?.toString() ?? '0') ?? 0.0
+            };
+
+            // D. Pelunasan yang sudah diterima oleh kreditur (status COMPLETED)
+            final recvRes = await _db.executeParams(
+              "SELECT creditor_id, COALESCE(SUM(amount), 0.0) FROM settlements WHERE group_id = \$1 AND status = 'COMPLETED' GROUP BY creditor_id;",
+              [gid],
+            );
+            final Map<String, double> recvMap = {
+              for (final r in recvRes) r[0].toString(): double.tryParse(r[1]?.toString() ?? '0') ?? 0.0
+            };
+
             final members = memRes.map((m) {
               final uid = m[2].toString();
               final paid = paidMap[uid] ?? 0.0;
               final owed = owedMap[uid] ?? 0.0;
-              final net = paid - owed;
+              final sent = sentMap[uid] ?? 0.0;
+              final recv = recvMap[uid] ?? 0.0;
+
+              // Rumus: Saldo anggota = Total pembayaran aktual − Total tanggungan
+              final rawNet = (paid + sent) - (owed + recv);
+              final net = double.parse(rawNet.toStringAsFixed(2)) == -0.0 ? 0.0 : double.parse(rawNet.toStringAsFixed(2));
 
               return GroupMemberModel(
                 id: m[0].toString(),
@@ -244,9 +272,13 @@ class GroupRepositoryImpl implements GroupRepository {
             // 4. Current user debt and credit for this group
             final userPaid = paidMap[currentUserId] ?? 0.0;
             final userOwed = owedMap[currentUserId] ?? 0.0;
-            final userNet = userPaid - userOwed;
-            final double userCredit = userNet > 0 ? userNet : 0.0;
-            final double userDebt = userNet < 0 ? -userNet : 0.0;
+            final userSent = sentMap[currentUserId] ?? 0.0;
+            final userRecv = recvMap[currentUserId] ?? 0.0;
+            final rawUserNet = (userPaid + userSent) - (userOwed + userRecv);
+            final userNet = double.parse(rawUserNet.toStringAsFixed(2)) == -0.0 ? 0.0 : double.parse(rawUserNet.toStringAsFixed(2));
+
+            final double userCredit = userNet > 0.001 ? userNet : 0.0;
+            final double userDebt = userNet < -0.001 ? -userNet : 0.0;
 
             groups.add(GroupModel(
               id: gid,
@@ -298,7 +330,7 @@ class GroupRepositoryImpl implements GroupRepository {
 
     final populatedMembers = members.map((m) {
       return m.copyWith(
-        id: m.id.isEmpty ? 'mem-${_uuid.v4().substring(0, 6)}' : m.id,
+        id: 'mem-${_uuid.v4().substring(0, 8)}',
         groupId: newId,
       );
     }).toList();
@@ -325,7 +357,7 @@ class GroupRepositoryImpl implements GroupRepository {
       try {
         await _db.executeParams(
           "INSERT INTO groups (id, name, category, icon_name, created_by, created_at, description) VALUES (\$1, \$2, \$3, \$4, \$5, \$6, \$7);",
-          [newId, name, category, iconName, createdBy, now, description],
+          [newId, name, category, iconName, createdBy, now.toIso8601String(), description],
         );
         for (final m in populatedMembers) {
           await _db.executeParams(
@@ -333,7 +365,9 @@ class GroupRepositoryImpl implements GroupRepository {
             [m.id, newId, m.userId, m.role, m.userName, m.phoneNumber],
           );
         }
-      } catch (_) {}
+      } catch (e, st) {
+        debugPrint('Error inserting group to SQLite: $e\n$st');
+      }
     }
 
     return newGroup;

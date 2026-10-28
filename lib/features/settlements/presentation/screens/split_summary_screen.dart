@@ -9,6 +9,7 @@ import '../../../../shared/widgets/qris_modal.dart';
 import '../../../../shared/widgets/custom_button.dart';
 import '../bloc/settlement_bloc.dart';
 import '../../../groups/domain/models/group_model.dart';
+import '../../../groups/presentation/bloc/group_bloc.dart';
 import '../../domain/models/settlement_model.dart';
 
 class SplitSummaryScreen extends StatefulWidget {
@@ -71,6 +72,7 @@ class _SplitSummaryScreenState extends State<SplitSummaryScreen> {
             ),
           ),
         );
+        context.read<GroupBloc>().add(LoadGroupsEvent());
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text('Pembayaran ${CurrencyFormatter.format(settlement.amount)} berhasil dikonfirmasi!'),
@@ -85,7 +87,14 @@ class _SplitSummaryScreenState extends State<SplitSummaryScreen> {
   Widget build(BuildContext context) {
     final palette = context.palette;
     final isDark = context.isDark;
-    final totalSpending = widget.group.totalSpending > 0 ? widget.group.totalSpending : 400000.0;
+    final groupState = context.watch<GroupBloc>().state;
+    final group = (groupState is GroupLoaded)
+        ? groupState.groups.firstWhere(
+            (g) => g.id == widget.group.id,
+            orElse: () => widget.group,
+          )
+        : widget.group;
+    final totalSpending = group.totalSpending;
 
     return Scaffold(
       appBar: AppBar(

@@ -243,22 +243,16 @@ class _HomeDashboardScreenState extends State<HomeDashboardScreen> {
                 // Balance Cards Row
                 BlocBuilder<GroupBloc, GroupState>(
                   builder: (context, state) {
-                    double debt = 125000.0;
-                    double credit = 75000.0;
-                    int debtCount = 2;
-                    int creditCount = 1;
+                    double debt = 0.0;
+                    double credit = 0.0;
+                    int debtCount = 0;
+                    int creditCount = 0;
 
                     if (state is GroupLoaded) {
-                      debt = state.totalDebt > 0 ? state.totalDebt : debt;
-                      credit = state.totalCredit > 0
-                          ? state.totalCredit
-                          : credit;
-                      debtCount = state.debtCount > 0
-                          ? state.debtCount
-                          : debtCount;
-                      creditCount = state.creditCount > 0
-                          ? state.creditCount
-                          : creditCount;
+                      debt = state.totalDebt;
+                      credit = state.totalCredit;
+                      debtCount = state.debtCount;
+                      creditCount = state.creditCount;
                     }
 
                     return Row(

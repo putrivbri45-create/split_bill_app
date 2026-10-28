@@ -69,6 +69,18 @@ class GroupMemberModel extends Equatable {
     );
   }
 
+  bool get shouldReceive => netBalance > 0.001;
+  bool get shouldPay => netBalance < -0.001;
+  bool get isSettled => !shouldReceive && !shouldPay;
+  double get amountToReceive => shouldReceive ? netBalance : 0.0;
+  double get amountToPay => shouldPay ? -netBalance : 0.0;
+
+  String get balanceTypeLabel {
+    if (shouldReceive) return 'Uang yang Harus Diterima';
+    if (shouldPay) return 'Uang yang Harus Dibayar';
+    return 'Lunas';
+  }
+
   @override
   List<Object?> get props => [id, groupId, userId, role, userName, avatarUrl, netBalance, phoneNumber];
 }
@@ -176,6 +188,12 @@ class GroupModel extends Equatable {
       description: json['description'] as String?,
     );
   }
+
+  /// Total uang yang harus diterima oleh semua anggota yang menalangi lebih dari tanggungannya
+  double get totalToReceive => members.where((m) => m.netBalance > 0.001).fold<double>(0.0, (sum, m) => sum + m.netBalance);
+
+  /// Total uang yang harus dibayar oleh semua anggota yang tanggungannya belum lunas
+  double get totalToPay => members.where((m) => m.netBalance < -0.001).fold<double>(0.0, (sum, m) => sum + (-m.netBalance));
 
   @override
   List<Object?> get props => [

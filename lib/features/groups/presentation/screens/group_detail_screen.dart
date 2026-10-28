@@ -93,7 +93,13 @@ class _GroupDetailScreenState extends State<GroupDetailScreen> {
   Widget build(BuildContext context) {
     final palette = context.palette;
     final isDark = context.isDark;
-    final group = widget.group;
+    final groupState = context.watch<GroupBloc>().state;
+    final group = (groupState is GroupLoaded)
+        ? groupState.groups.firstWhere(
+            (g) => g.id == widget.group.id,
+            orElse: () => widget.group,
+          )
+        : widget.group;
 
     return Scaffold(
       appBar: AppBar(
@@ -432,7 +438,7 @@ class _GroupDetailScreenState extends State<GroupDetailScreen> {
                                 ),
                                 alignment: Alignment.center,
                                 child: Text(
-                                  'Pengeluaran (${group.expenseCount > 0 ? group.expenseCount : 4})',
+                                  'Pengeluaran (${group.expenseCount})',
                                   style: AppText.labelLarge.copyWith(
                                     fontWeight: FontWeight.bold,
                                     color: _selectedTab == 1 ? Colors.white : palette.onSurfaceVariant,
@@ -533,7 +539,81 @@ class _GroupDetailScreenState extends State<GroupDetailScreen> {
                       ),
                     ] else ...[
                       // Members Tab Detail
+                      // Summary Balance Card
+                      Container(
+                        margin: const EdgeInsets.only(bottom: 16),
+                        padding: const EdgeInsets.all(16),
+                        decoration: BoxDecoration(
+                          color: isDark ? const Color(0xFF132338) : const Color(0xFFF0FDF4),
+                          borderRadius: BorderRadius.circular(16),
+                          border: Border.all(
+                            color: isDark ? const Color(0xFF1E3A5F) : const Color(0xFFBBF7D0),
+                          ),
+                        ),
+                        child: Row(
+                          children: [
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    'Total Harus Diterima',
+                                    style: AppText.labelSm.copyWith(
+                                      color: const Color(0xFF10B981),
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 4),
+                                  Text(
+                                    CurrencyFormatter.format(group.totalToReceive),
+                                    style: AppText.titleMedium.copyWith(
+                                      fontWeight: FontWeight.w800,
+                                      color: const Color(0xFF10B981),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            Container(
+                              height: 36,
+                              width: 1,
+                              color: isDark ? const Color(0xFF1E3A5F) : const Color(0xFFBBF7D0),
+                            ),
+                            const SizedBox(width: 16),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    'Total Harus Dibayar',
+                                    style: AppText.labelSm.copyWith(
+                                      color: AppColors.error,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 4),
+                                  Text(
+                                    CurrencyFormatter.format(group.totalToPay),
+                                    style: AppText.titleMedium.copyWith(
+                                      fontWeight: FontWeight.w800,
+                                      color: AppColors.error,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+
                       ...group.members.map((m) {
+                        final Color balanceColor = m.shouldReceive
+                            ? const Color(0xFF10B981)
+                            : (m.shouldPay ? AppColors.error : palette.onSurfaceVariant);
+                        final String balanceText = m.shouldReceive
+                            ? '+${CurrencyFormatter.format(m.amountToReceive)}'
+                            : (m.shouldPay ? '-${CurrencyFormatter.format(m.amountToPay)}' : 'Rp0');
+
                         return Container(
                           margin: const EdgeInsets.only(bottom: 10),
                           padding: const EdgeInsets.all(14),
@@ -561,12 +641,26 @@ class _GroupDetailScreenState extends State<GroupDetailScreen> {
                                   ],
                                 ),
                               ),
-                              Text(
-                                m.netBalance >= 0 ? '+${CurrencyFormatter.format(m.netBalance)}' : CurrencyFormatter.format(m.netBalance),
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: m.netBalance >= 0 ? const Color(0xFF10B981) : AppColors.error,
-                                ),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.end,
+                                children: [
+                                  Text(
+                                    balanceText,
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 15,
+                                      color: balanceColor,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 2),
+                                  Text(
+                                    m.balanceTypeLabel,
+                                    style: AppText.labelSm.copyWith(
+                                      color: balanceColor,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                                ],
                               ),
                             ],
                           ),
