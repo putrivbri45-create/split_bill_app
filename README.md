@@ -85,7 +85,7 @@ Seluruh logika bisnis dan komponen widget telah divalidasi dengan unit & widget 
 ```bash
 flutter test
 ```
-*Hasil: **13/13 test suites lulus (100% Passed)**.*
+*Hasil: **17/17 tests lulus (100% Passed)**.*
 
 ```bash
 flutter analyze

@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'config/routes.dart';
 import 'config/theme.dart';
+import 'core/database/database_service.dart';
 import 'features/auth/data/auth_repository.dart';
 import 'features/auth/presentation/bloc/auth_bloc.dart';
 import 'features/groups/data/group_repository.dart';
@@ -15,6 +16,13 @@ import 'features/settings/presentation/cubit/settings_cubit.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  // Initialize SQLite database
+  try {
+    await DatabaseService.instance.init();
+  } catch (e) {
+    debugPrint('Database init error: $e');
+  }
 
   // Load environment variables gracefully
   try {

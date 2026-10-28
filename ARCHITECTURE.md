@@ -46,9 +46,9 @@ lib/
 
 #### B. Data Layer (Middle - Persistence & APIs)
 - **Data Sources**:
-  - `PostgresRemoteDataSource`: Direct connection pool to Neon PostgreSQL utilizing parameterized queries.
+  - `DatabaseService`: Cross-platform SQLite engine supporting Web (`sqflite_common_ffi_web` with WebAssembly/IndexedDB), Desktop (`sqflite_common_ffi` on Windows/macOS/Linux), and Mobile (`sqflite` on Android/iOS).
   - `LocalCacheDataSource`: Offline caching with `SharedPreferences` and encrypted session keys in `FlutterSecureStorage`.
-- **Repository Implementations**: Coordinates between local cache and Neon database, handling auto-reconnect, exponential backoff, and offline fallback.
+- **Repository Implementations**: Coordinates local SQLite persistence, automated schema migration, and initial data seeding.
 - **Models / Mappers**: Translates raw database rows and JSON payloads into domain entities.
 
 #### C. Presentation Layer (Outermost - Flutter UI & BLoCs)

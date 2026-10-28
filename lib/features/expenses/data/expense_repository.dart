@@ -145,7 +145,7 @@ class ExpenseRepositoryImpl implements ExpenseRepository {
               userId: s[2].toString(),
               userName: 'Member',
               amountOwed: double.tryParse(s[3]?.toString() ?? '0') ?? 0.0,
-              isSettled: s[4] == true,
+              isSettled: s[4] == true || s[4] == 1 || s[4] == '1' || s[4] == 'true',
             )).toList();
 
             list.add(ExpenseModel(
