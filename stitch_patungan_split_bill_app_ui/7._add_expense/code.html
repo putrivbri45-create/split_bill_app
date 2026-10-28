@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+
+<html lang="id"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Tambah Pengeluaran - Patungan</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "secondary-container": "#6df5e1",
+            "on-secondary-fixed": "#00201c",
+            "tertiary-fixed-dim": "#adc6ff",
+            "error-container": "#ffdad6",
+            "surface-bright": "#faf8ff",
+            "on-tertiary": "#ffffff",
+            "primary-container": "#10b981",
+            "on-secondary": "#ffffff",
+            "surface": "#faf8ff",
+            "surface-container-low": "#f2f3ff",
+            "on-error-container": "#93000a",
+            "on-primary": "#ffffff",
+            "outline-variant": "#bbcabf",
+            "error": "#ba1a1a",
+            "primary": "#006c49",
+            "tertiary": "#005ac2",
+            "on-secondary-container": "#006f64",
+            "on-primary-fixed-variant": "#005236",
+            "outline": "#6c7a71",
+            "secondary-fixed": "#71f8e4",
+            "on-surface-variant": "#3c4a42",
+            "on-secondary-fixed-variant": "#005048",
+            "surface-tint": "#006c49",
+            "inverse-surface": "#283044",
+            "surface-container-lowest": "#ffffff",
+            "secondary-fixed-dim": "#4fdbc8",
+            "surface-container": "#eaedff",
+            "primary-fixed": "#6ffbbe",
+            "on-tertiary-fixed": "#001a42",
+            "on-surface": "#131b2e",
+            "on-error": "#ffffff",
+            "primary-fixed-dim": "#4edea3",
+            "tertiary-container": "#71a1ff",
+            "on-tertiary-container": "#00367a",
+            "surface-variant": "#dae2fd",
+            "tertiary-fixed": "#d8e2ff",
+            "on-background": "#131b2e",
+            "background": "#faf8ff",
+            "secondary": "#006b5f",
+            "surface-container-highest": "#dae2fd",
+            "on-primary-container": "#00422b",
+            "surface-container-high": "#e2e7ff",
+            "surface-dim": "#d2d9f4",
+            "inverse-primary": "#4edea3",
+            "on-tertiary-fixed-variant": "#004395",
+            "on-primary-fixed": "#002113",
+            "inverse-on-surface": "#eef0ff"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "full": "9999px"
+          },
+          "spacing": {
+            "margin-tablet": "1.5rem",
+            "space-sm": "0.5rem",
+            "space-lg": "1.25rem",
+            "gutter": "1rem",
+            "gutter-mobile": "0.75rem",
+            "space-md": "1rem",
+            "margin": "1rem",
+            "space-xs": "0.25rem",
+            "space-xl": "1.75rem"
+          },
+          "fontFamily": {
+            "amount-inline": ["Plus Jakarta Sans"],
+            "body-sm": ["Plus Jakarta Sans"],
+            "headline-md": ["Plus Jakarta Sans"],
+            "amount-display": ["Plus Jakarta Sans"],
+            "headline-xl": ["Plus Jakarta Sans"],
+            "headline-sm": ["Plus Jakarta Sans"],
+            "label-lg": ["Plus Jakarta Sans"],
+            "headline-lg": ["Plus Jakarta Sans"],
+            "label-sm": ["Plus Jakarta Sans"],
+            "body-md": ["Plus Jakarta Sans"],
+            "body-lg": ["Plus Jakarta Sans"],
+            "label-md": ["Plus Jakarta Sans"],
+            "headline-xl-mobile": ["Plus Jakarta Sans"]
+          },
+          "fontSize": {
+            "amount-inline": ["15px", { "lineHeight": "20px", "fontWeight": "700" }],
+            "body-sm": ["12px", { "lineHeight": "16px", "fontWeight": "400" }],
+            "headline-md": ["20px", { "lineHeight": "28px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+            "amount-display": ["28px", { "lineHeight": "36px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+            "headline-xl": ["36px", { "lineHeight": "44px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+            "headline-sm": ["18px", { "lineHeight": "24px", "fontWeight": "600" }],
+            "label-lg": ["14px", { "lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "600" }],
+            "headline-lg": ["26px", { "lineHeight": "34px", "letterSpacing": "-0.015em", "fontWeight": "700" }],
+            "label-sm": ["11px", { "lineHeight": "14px", "letterSpacing": "0.03em", "fontWeight": "600" }],
+            "body-md": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],
+            "body-lg": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+            "label-md": ["12px", { "lineHeight": "16px", "letterSpacing": "0.02em", "fontWeight": "600" }],
+            "headline-xl-mobile": ["30px", { "lineHeight": "38px", "letterSpacing": "-0.02em", "fontWeight": "700" }]
+          }
+        }
+      }
+    }
+  </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-surface antialiased min-h-screen flex justify-center selection:bg-secondary-container selection:text-on-secondary-container">
+<!-- Mobile Wrapper Viewport -->
+<div class="w-full max-w-md bg-surface flex flex-col min-h-screen relative shadow-2xl">
+<!-- Top App Bar (Task-focused context: Bottom Nav is suppressed per Semantic Shell Mandate) -->
+<header class="sticky top-0 z-40 bg-surface shadow-sm flex items-center justify-between px-margin h-14 backdrop-blur-md bg-opacity-95">
+<div class="flex items-center gap-space-sm">
+<button aria-label="Kembali" class="w-10 h-10 -ml-2 rounded-full flex items-center justify-center text-on-surface hover:bg-surface-container active:scale-95 transition-transform duration-150" type="button">
+<span class="material-symbols-outlined text-on-surface">arrow_back</span>
+</button>
+<h1 class="text-headline-sm font-headline-sm text-on-surface tracking-tight font-bold">
+          Tambah Pengeluaran
+        </h1>
+</div>
+<!-- Trailing Action: Receipt Scan OCR with Badge/Tooltip -->
+<div class="relative group">
+<button aria-label="Scan Struk" class="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-surface-container-low hover:bg-surface-container text-primary active:scale-95 transition-all duration-150" type="button">
+<span class="material-symbols-outlined text-primary text-xl" data-weight="fill" style="font-variation-settings: 'FILL' 1;">document_scanner</span>
+<span class="text-label-sm font-label-sm text-primary font-bold">Scan Struk</span>
+</button>
+</div>
+</header>
+<!-- Main Scrollable Form Body -->
+<main class="flex-1 px-margin pt-space-md pb-32 space-y-space-lg">
+<!-- Amount Input Hero Box -->
+<section class="bg-surface-container-lowest rounded-2xl p-space-md shadow-sm border border-surface-container">
+<div class="flex items-center justify-between mb-space-xs">
+<label class="text-label-md font-label-md text-on-surface-variant font-medium" for="nominal-input">Nominal Total</label>
+<span class="inline-flex items-center gap-1 text-label-sm font-label-sm text-primary bg-primary-fixed/30 px-2 py-0.5 rounded-full font-bold">
+<span class="material-symbols-outlined text-xs">payments</span> IDR
+          </span>
+</div>
+<div class="flex items-baseline mt-1 mb-3">
+<span class="text-headline-md font-headline-md text-on-surface-variant font-bold mr-1.5 select-none">Rp</span>
+<input class="w-full bg-transparent border-0 p-0 text-amount-display font-amount-display font-extrabold text-on-surface focus:ring-0 tracking-tight" id="nominal-input" placeholder="0" type="text" value="200.000"/>
+</div>
+<!-- Quick Amount Pills -->
+<div class="grid grid-cols-4 gap-2 pt-2 border-t border-surface-container-low">
+<button class="py-1.5 px-2 rounded-xl bg-surface-container-low hover:bg-surface-container text-on-surface-variant hover:text-primary text-label-md font-label-md font-bold transition-colors active:scale-95" type="button">
+            +10k
+          </button>
+<button class="py-1.5 px-2 rounded-xl bg-surface-container-low hover:bg-surface-container text-on-surface-variant hover:text-primary text-label-md font-label-md font-bold transition-colors active:scale-95" type="button">
+            +50k
+          </button>
+<button class="py-1.5 px-2 rounded-xl bg-surface-container-low hover:bg-surface-container text-on-surface-variant hover:text-primary text-label-md font-label-md font-bold transition-colors active:scale-95" type="button">
+            +100k
+          </button>
+<button class="py-1.5 px-2 rounded-xl bg-secondary-container text-on-secondary-container text-label-md font-label-md font-bold transition-colors active:scale-95" type="button">
+            Pas
+          </button>
+</div>
+</section>
+<!-- Expense Details Section -->
+<section class="space-y-space-md">
+<!-- Nama Pengeluaran Input -->
+<div class="bg-surface-container-lowest rounded-2xl p-space-md shadow-sm border border-surface-container">
+<label class="block text-label-md font-label-md text-on-surface-variant font-medium mb-1.5" for="nama-pengeluaran">
+            Nama Pengeluaran
+          </label>
+<div class="relative flex items-center">
+<span class="absolute left-3.5 material-symbols-outlined text-primary text-xl">restaurant</span>
+<input class="w-full pl-11 pr-4 py-3 rounded-xl bg-surface-bright border border-outline-variant/50 text-body-lg font-body-lg text-on-surface font-medium focus:border-primary-container focus:ring-1 focus:ring-primary-container outline-none transition-all" id="nama-pengeluaran" placeholder="Contoh: Tiket Bioskop, Makan Siang" type="text" value="Makan di Restoran"/>
+</div>
+</div>
+<!-- Category Selector -->
+<div class="bg-surface-container-lowest rounded-2xl p-space-md shadow-sm border border-surface-container">
+<label class="block text-label-md font-label-md text-on-surface-variant font-medium mb-2.5">
+            Kategori
+          </label>
+<div class="flex items-center gap-2 overflow-x-auto pb-1 no-scrollbar">
+<!-- Makanan & Minuman (Selected) -->
+<button class="flex-shrink-0 flex items-center gap-1.5 px-3.5 py-2 rounded-full bg-primary-container text-on-primary text-label-md font-label-md font-bold shadow-sm" type="button">
+<span class="material-symbols-outlined text-base">restaurant</span>
+<span>Makanan &amp; Minuman</span>
+</button>
+<!-- Transport -->
+<button class="flex-shrink-0 flex items-center gap-1.5 px-3.5 py-2 rounded-full bg-surface-bright border border-outline-variant/60 text-on-surface-variant hover:border-outline text-label-md font-label-md font-medium transition-colors" type="button">
+<span class="material-symbols-outlined text-base">directions_car</span>
+<span>Transport</span>
+</button>
+<!-- Hiburan -->
+<button class="flex-shrink-0 flex items-center gap-1.5 px-3.5 py-2 rounded-full bg-surface-bright border border-outline-variant/60 text-on-surface-variant hover:border-outline text-label-md font-label-md font-medium transition-colors" type="button">
+<span class="material-symbols-outlined text-base">movie</span>
+<span>Hiburan</span>
+</button>
+<!-- Belanja -->
+<button class="flex-shrink-0 flex items-center gap-1.5 px-3.5 py-2 rounded-full bg-surface-bright border border-outline-variant/60 text-on-surface-variant hover:border-outline text-label-md font-label-md font-medium transition-colors" type="button">
+<span class="material-symbols-outlined text-base">shopping_bag</span>
+<span>Belanja</span>
+</button>
+</div>
+</div>
+<!-- Dibayar Oleh Selector Dropdown -->
+<div class="bg-surface-container-lowest rounded-2xl p-space-md shadow-sm border border-surface-container">
+<label class="block text-label-md font-label-md text-on-surface-variant font-medium mb-1.5">
+            Dibayar oleh
+          </label>
+<div class="flex items-center justify-between p-2.5 px-3.5 rounded-xl bg-surface-bright border border-outline-variant/50 cursor-pointer hover:border-primary-container transition-colors">
+<div class="flex items-center gap-3">
+<div class="relative">
+<img class="w-9 h-9 rounded-full object-cover ring-2 ring-primary-container" data-alt="Close up portrait photograph of Ani, a cheerful young Southeast Asian woman smiling warmly, soft neutral ambient studio lighting, modern minimalist color scheme featuring subtle emerald and cool tones, pristine and approachable aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDTmcdtrI_uIt_IsfEUEy51NBJDROmAmxfUlrgbyzzA6E_5uYhozxfz31SbHvh42yl1HkarR-W2TUNG2h9KFA-DSolqAhqnfY1zmlolQKMOAK2NrlxBvKGfhRR2uDBEko3OBs0VjaB_PausL22hHz29KCj3BdHzqkeiQ3TO8zjaGBqpF0a6TAlaH_Vnf2Z6EDRz-si6e3_ONBEiey5OiN9_hSqeoGh4HWudEPxqkT-VNE2H28gmHDd98A"/>
+<span class="absolute -bottom-1 -right-1 w-4 h-4 bg-primary-container text-on-primary rounded-full flex items-center justify-center text-[10px]">
+<span class="material-symbols-outlined text-[11px]" data-weight="fill" style="font-variation-settings: 'FILL' 1;">check</span>
+</span>
+</div>
+<div class="text-left">
+<span class="text-body-md font-body-md font-bold text-on-surface block">Ani</span>
+<span class="text-label-sm font-label-sm text-primary font-medium">Membayar lunas Rp200.000</span>
+</div>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant">expand_more</span>
+</div>
+</div>
+</section>
+<!-- Section 'Ditanggung oleh' (Split between) -->
+<section class="bg-surface-container-lowest rounded-2xl p-space-md shadow-sm border border-surface-container space-y-space-md">
+<!-- Split Header -->
+<div class="flex items-center justify-between">
+<div>
+<h2 class="text-headline-sm font-headline-sm font-bold text-on-surface">Ditanggung oleh</h2>
+<p class="text-label-sm font-label-sm text-on-surface-variant font-normal">Pilih siapa saja yang ikut patungan</p>
+</div>
+<button class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-secondary-container/40 text-on-secondary-container hover:bg-secondary-container/60 text-label-sm font-label-sm font-bold transition-all" type="button">
+<span class="material-symbols-outlined text-sm" data-weight="fill" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+<span>Pilih semua (4)</span>
+</button>
+</div>
+<!-- Checkbox Member List -->
+<div class="space-y-space-sm divide-y divide-dashed divide-surface-container">
+<!-- Member 1: Ani -->
+<div class="flex items-center justify-between pt-2.5 first:pt-0">
+<div class="flex items-center gap-3">
+<label class="relative flex items-center justify-center cursor-pointer">
+<input checked="" class="w-5 h-5 rounded text-primary-container focus:ring-primary-container border-outline-variant" type="checkbox"/>
+</label>
+<img class="w-10 h-10 rounded-full object-cover ring-2 ring-primary-container" data-alt="Warm natural portrait of Ani, an Indonesian young woman wearing a casual green top, soft diffused warm indoor lighting, friendly and calm expression, premium light mode editorial photography aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDjEKqHFvRZZUqQOPCOLfV24HIqGKLpGDk_L9e0cUEBCsSJkT8dtBAT68RYlakVK17WwwFoL1E4_41otQ_anLei3jco8hUYWjd-9r_Gt2Nb-DE7Fq0jxAlro7nBrgDuH9gg03j9MCsHwKrlVZ4R6URwVYgyc7nh_pI-kaYZ0WLBeNfB5DWd0M5nZTJrLMqp40xLD3NbW8RTjhntqQJCML2Y4O5mJgbgtNu6xw7fHOpTIqS2SAqL6K6G8g"/>
+<div>
+<p class="text-body-md font-body-md font-bold text-on-surface">Ani <span class="text-label-sm font-label-sm font-normal text-on-surface-variant">(Anda)</span></p>
+<p class="text-label-sm font-label-sm text-on-surface-variant">Pembayar Utama</p>
+</div>
+</div>
+<div class="text-right">
+<span class="text-amount-inline font-amount-inline text-on-surface block font-bold">Rp50.000</span>
+<span class="text-label-sm font-label-sm text-on-surface-variant">/ orang</span>
+</div>
+</div>
+<!-- Member 2: Budi -->
+<div class="flex items-center justify-between pt-2.5">
+<div class="flex items-center gap-3">
+<label class="relative flex items-center justify-center cursor-pointer">
+<input checked="" class="w-5 h-5 rounded text-primary-container focus:ring-primary-container border-outline-variant" type="checkbox"/>
+</label>
+<img class="w-10 h-10 rounded-full object-cover ring-2 ring-primary-container" data-alt="Editorial headshot of Budi, a young Southeast Asian man with short clean haircut in a navy blue casual shirt, neutral bright studio backdrop, balanced realistic key light with gentle shadows, friendly and modern financial persona." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDR5Yqhcpg4yK28b_288fvBttw0RqCtMm12qglV1VYHoYDRfKyZ7tcM4VjPnb0LmBswu4EkLpQawJYmNxE4lEUZ5cK1N7gZLpxefXn3FrUWfRDF6eyfExrZUfNuax3t3QAnsA6NRWdKFYS8RmxUd6hqrmtR8fSServptv3nLFHFb1DiczHl23F3SFlkLMuqNk2ATSMdXPFr5lA5h1ACiFZREysVS0YIKVryo6DhkEsrTaPyivVzga7lIw"/>
+<div>
+<p class="text-body-md font-body-md font-bold text-on-surface">Budi</p>
+<p class="text-label-sm font-label-sm text-on-surface-variant">Anggota</p>
+</div>
+</div>
+<div class="text-right">
+<span class="text-amount-inline font-amount-inline text-on-surface block font-bold">Rp50.000</span>
+<span class="text-label-sm font-label-sm text-on-surface-variant">/ orang</span>
+</div>
+</div>
+<!-- Member 3: Citra -->
+<div class="flex items-center justify-between pt-2.5">
+<div class="flex items-center gap-3">
+<label class="relative flex items-center justify-center cursor-pointer">
+<input checked="" class="w-5 h-5 rounded text-primary-container focus:ring-primary-container border-outline-variant" type="checkbox"/>
+</label>
+<img class="w-10 h-10 rounded-full object-cover ring-2 ring-primary-container" data-alt="Clean corporate and lifestyle portrait of Citra, a young Indonesian woman wearing delicate spectacles and a warm beige sweater, brightly lit airy cafe background with pristine light rendering, welcoming and tidy aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCqAoZvw1usR4RKW1QOfJSA-xnaC7sgbaV0vK-bgEkgYesVzA0oMPcCYHtdqLmzPnP3BXqJUU1rViZGLFqhuNgGK6lI-PNYoJFWO6P2mCrDiuwzQHfpujsR-49TpmcwbVnJunHY72amOlYmrhYSnsD8ySAIYn0SJTvCeyQALIZrN_Zez1d3SPEmjSDcgpYHkhCmjBOUlKYjAgE8VjXCO0usD7Wvd79YgugVVN7poqkBjCgw0QwO8P_6gA"/>
+<div>
+<p class="text-body-md font-body-md font-bold text-on-surface">Citra</p>
+<p class="text-label-sm font-label-sm text-on-surface-variant">Anggota</p>
+</div>
+</div>
+<div class="text-right">
+<span class="text-amount-inline font-amount-inline text-on-surface block font-bold">Rp50.000</span>
+<span class="text-label-sm font-label-sm text-on-surface-variant">/ orang</span>
+</div>
+</div>
+<!-- Member 4: Dimas -->
+<div class="flex items-center justify-between pt-2.5">
+<div class="flex items-center gap-3">
+<label class="relative flex items-center justify-center cursor-pointer">
+<input checked="" class="w-5 h-5 rounded text-primary-container focus:ring-primary-container border-outline-variant" type="checkbox"/>
+</label>
+<img class="w-10 h-10 rounded-full object-cover ring-2 ring-primary-container" data-alt="Close up photography of Dimas, a smiling Indonesian young adult with a modern stylish haircut wearing a light grey shirt, soft diffuse daylight from the side, clean modern aesthetic adhering to emerald-accented design systems." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCPY3itiXnk8PXzdpWDOpF5r0zLbP7lTI7lFRQyda6S87aFAby7DqbpWfNk25eiQZZrTBL5FDJBmDZGcuoTRQUjT1ldBv976UdS8rlBpo_7ot7lAZ-USxgxE_PdmXUB3A0QfQIR42xRhZRHV0_ipJ-3FrEmq7E6ytNGgSqOWXHLyOLYlKV1CPRmAedBj5MKK_qF3BDb76P5eodbPsn-3rNaQVhiSjvSQgPAbA0AdJM71pTOap9MD3IsqQ"/>
+<div>
+<p class="text-body-md font-body-md font-bold text-on-surface">Dimas</p>
+<p class="text-label-sm font-label-sm text-on-surface-variant">Anggota</p>
+</div>
+</div>
+<div class="text-right">
+<span class="text-amount-inline font-amount-inline text-on-surface block font-bold">Rp50.000</span>
+<span class="text-label-sm font-label-sm text-on-surface-variant">/ orang</span>
+</div>
+</div>
+</div>
+<!-- Live Preview Banner -->
+<div class="p-3 rounded-xl bg-surface-container-low border border-secondary-container/40 flex items-center gap-2.5">
+<span class="material-symbols-outlined text-primary text-xl flex-shrink-0" data-weight="fill" style="font-variation-settings: 'FILL' 1;">calculate</span>
+<p class="text-body-sm font-body-sm text-on-surface leading-tight">
+<span class="font-bold text-primary">Estimasi:</span> 4 orang membagi rata masing-masing <span class="font-bold text-on-surface">Rp50.000</span>.
+          </p>
+</div>
+</section>
+<!-- Additional Details: Notes & Receipt Photo Attachment -->
+<section class="space-y-space-md">
+<!-- Catatan Input -->
+<div class="bg-surface-container-lowest rounded-2xl p-space-md shadow-sm border border-surface-container">
+<label class="flex items-center justify-between text-label-md font-label-md text-on-surface-variant font-medium mb-1.5" for="catatan-input">
+<span>Catatan</span>
+<span class="text-label-sm font-label-sm text-outline-variant font-normal">Opsional</span>
+</label>
+<div class="relative flex items-center">
+<span class="absolute left-3.5 material-symbols-outlined text-outline text-xl">edit_note</span>
+<input class="w-full pl-11 pr-4 py-2.5 rounded-xl bg-surface-bright border border-outline-variant/50 text-body-md font-body-md text-on-surface font-medium focus:border-primary-container focus:ring-1 focus:ring-primary-container outline-none transition-all" id="catatan-input" type="text" value="Makan malam di restoran Seafood."/>
+</div>
+</div>
+<!-- Photo Attachment Button -->
+<button class="w-full py-3.5 px-4 rounded-2xl border-2 border-dashed border-outline-variant/70 hover:border-primary-container bg-surface-container-lowest hover:bg-surface-container-low text-primary flex items-center justify-center gap-2 transition-all group active:scale-[0.99]" type="button">
+<span class="material-symbols-outlined text-xl group-hover:scale-110 transition-transform">add_a_photo</span>
+<span class="text-label-lg font-label-lg font-bold">+ Lampirkan Foto Struk</span>
+</button>
+</section>
+</main>
+<!-- Bottom Sticky CTA Container (Elevation Level 2) -->
+<footer class="sticky bottom-0 left-0 w-full z-30 p-margin bg-surface-container-lowest/90 backdrop-blur-md border-t border-surface-container-low shadow-[0_-8px_24px_rgba(15,23,42,0.06)]">
+<button class="w-full h-14 bg-primary-container hover:bg-primary text-white rounded-2xl font-label-lg font-bold flex items-center justify-center gap-2 shadow-lg shadow-primary-container/30 active:scale-95 transition-all duration-150" type="button">
+<span class="material-symbols-outlined text-xl">check</span>
+<span>Simpan Pengeluaran</span>
+</button>
+</footer>
+</div>
+</body></html>

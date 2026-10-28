@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+
+<html lang="id"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Hasil Pembagian - Patungan</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "secondary-container": "#6df5e1",
+            "on-secondary-fixed": "#00201c",
+            "tertiary-fixed-dim": "#adc6ff",
+            "error-container": "#ffdad6",
+            "surface-bright": "#faf8ff",
+            "on-tertiary": "#ffffff",
+            "primary-container": "#10b981",
+            "on-secondary": "#ffffff",
+            "surface": "#faf8ff",
+            "surface-container-low": "#f2f3ff",
+            "on-error-container": "#93000a",
+            "on-primary": "#ffffff",
+            "outline-variant": "#bbcabf",
+            "error": "#ba1a1a",
+            "primary": "#006c49",
+            "tertiary": "#005ac2",
+            "on-secondary-container": "#006f64",
+            "on-primary-fixed-variant": "#005236",
+            "outline": "#6c7a71",
+            "secondary-fixed": "#71f8e4",
+            "on-surface-variant": "#3c4a42",
+            "on-secondary-fixed-variant": "#005048",
+            "surface-tint": "#006c49",
+            "inverse-surface": "#283044",
+            "surface-container-lowest": "#ffffff",
+            "secondary-fixed-dim": "#4fdbc8",
+            "surface-container": "#eaedff",
+            "primary-fixed": "#6ffbbe",
+            "on-tertiary-fixed": "#001a42",
+            "on-surface": "#131b2e",
+            "on-error": "#ffffff",
+            "primary-fixed-dim": "#4edea3",
+            "tertiary-container": "#71a1ff",
+            "on-tertiary-container": "#00367a",
+            "surface-variant": "#dae2fd",
+            "tertiary-fixed": "#d8e2ff",
+            "on-background": "#131b2e",
+            "background": "#faf8ff",
+            "secondary": "#006b5f",
+            "surface-container-highest": "#dae2fd",
+            "on-primary-container": "#00422b",
+            "surface-container-high": "#e2e7ff",
+            "surface-dim": "#d2d9f4",
+            "inverse-primary": "#4edea3",
+            "on-tertiary-fixed-variant": "#004395",
+            "on-primary-fixed": "#002113",
+            "inverse-on-surface": "#eef0ff"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "full": "9999px"
+          },
+          "spacing": {
+            "margin-tablet": "1.5rem",
+            "space-sm": "0.5rem",
+            "space-lg": "1.25rem",
+            "gutter": "1rem",
+            "gutter-mobile": "0.75rem",
+            "space-md": "1rem",
+            "margin": "1rem",
+            "space-xs": "0.25rem",
+            "space-xl": "1.75rem"
+          },
+          "fontFamily": {
+            "amount-inline": ["Plus Jakarta Sans"],
+            "body-sm": ["Plus Jakarta Sans"],
+            "headline-md": ["Plus Jakarta Sans"],
+            "amount-display": ["Plus Jakarta Sans"],
+            "headline-xl": ["Plus Jakarta Sans"],
+            "headline-sm": ["Plus Jakarta Sans"],
+            "label-lg": ["Plus Jakarta Sans"],
+            "headline-lg": ["Plus Jakarta Sans"],
+            "label-sm": ["Plus Jakarta Sans"],
+            "body-md": ["Plus Jakarta Sans"],
+            "body-lg": ["Plus Jakarta Sans"],
+            "label-md": ["Plus Jakarta Sans"],
+            "headline-xl-mobile": ["Plus Jakarta Sans"]
+          },
+          "fontSize": {
+            "amount-inline": ["15px", { "lineHeight": "20px", "fontWeight": "700" }],
+            "body-sm": ["12px", { "lineHeight": "16px", "fontWeight": "400" }],
+            "headline-md": ["20px", { "lineHeight": "28px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+            "amount-display": ["28px", { "lineHeight": "36px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+            "headline-xl": ["36px", { "lineHeight": "44px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+            "headline-sm": ["18px", { "lineHeight": "24px", "fontWeight": "600" }],
+            "label-lg": ["14px", { "lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "600" }],
+            "headline-lg": ["26px", { "lineHeight": "34px", "letterSpacing": "-0.015em", "fontWeight": "700" }],
+            "label-sm": ["11px", { "lineHeight": "14px", "letterSpacing": "0.03em", "fontWeight": "600" }],
+            "body-md": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],
+            "body-lg": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+            "label-md": ["12px", { "lineHeight": "16px", "letterSpacing": "0.02em", "fontWeight": "600" }],
+            "headline-xl-mobile": ["30px", { "lineHeight": "38px", "letterSpacing": "-0.02em", "fontWeight": "700" }]
+          }
+        },
+      },
+    }
+  </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-surface antialiased min-h-screen flex flex-col font-body-md text-body-md select-none">
+<!-- Semantic Task Flow Screen: BottomNavBar is intentionally suppressed per Destination Rule -->
+<!-- Top App Bar -->
+<header class="sticky top-0 z-40 bg-surface flex justify-between items-center w-full px-margin md:px-margin-tablet h-14 shadow-sm">
+<button aria-label="Kembali" class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-surface-container active:scale-95 transition-transform duration-150 text-on-surface" type="button">
+<span class="material-symbols-outlined text-[24px]">arrow_back</span>
+</button>
+<h1 class="font-headline-sm text-headline-sm font-bold text-on-surface text-center flex-1 mx-2 truncate">Hasil Pembagian</h1>
+<button aria-label="Bagikan" class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-surface-container active:scale-95 transition-transform duration-150 text-on-surface" type="button">
+<span class="material-symbols-outlined text-[24px]">share</span>
+</button>
+</header>
+<!-- Main Scrollable Content -->
+<main class="flex-1 w-full max-w-lg mx-auto px-margin md:px-margin-tablet pt-space-md pb-36 flex flex-col gap-space-lg">
+<!-- Top Summary Card (Emerald Gradient) -->
+<section class="relative overflow-hidden rounded-[20px] bg-gradient-to-br from-primary-container via-primary to-on-primary-container p-space-lg text-on-primary shadow-lg shadow-primary-container/20">
+<!-- Background Ambient Glow & Motif -->
+<div class="absolute -top-12 -right-12 w-44 h-44 rounded-full bg-white/10 blur-xl pointer-events-none"></div>
+<div class="absolute -bottom-8 -left-8 w-36 h-36 rounded-full bg-emerald-400/20 blur-lg pointer-events-none"></div>
+<div class="relative z-10 flex flex-col gap-space-xs">
+<div class="flex items-center justify-between">
+<span class="font-label-md text-label-md text-emerald-100 font-medium tracking-wide">Total Pengeluaran</span>
+<span class="inline-flex items-center gap-1 bg-white/20 backdrop-blur-md px-2.5 py-1 rounded-full text-white font-label-sm text-label-sm">
+<span class="material-symbols-outlined text-[14px]">auto_awesome</span>
+            Algoritma Optimal
+          </span>
+</div>
+<div class="font-headline-xl-mobile md:font-headline-xl text-headline-xl-mobile md:text-headline-xl text-white font-extrabold tracking-tight mt-1">
+          Rp400.000
+        </div>
+<div class="flex items-start gap-2 mt-2 pt-2 border-t border-white/20 text-emerald-50">
+<span class="material-symbols-outlined text-[18px] shrink-0 text-emerald-200 mt-0.5">check_circle</span>
+<p class="font-body-sm text-body-sm leading-tight text-emerald-100">
+            Disederhanakan menjadi 3 transaksi pembayaran termudah
+          </p>
+</div>
+</div>
+</section>
+<!-- Visual Ledger Breakdown / Settlement Flows -->
+<section class="flex flex-col gap-space-md">
+<div class="flex items-center justify-between px-1">
+<h2 class="font-headline-sm text-headline-sm font-bold text-on-surface">Yang Harus Bayar / Menerima</h2>
+<span class="font-label-md text-label-md text-outline font-semibold">3 Transaksi</span>
+</div>
+<!-- Bento-style Flow Cards List -->
+<div class="flex flex-col gap-space-md">
+<!-- Card 1: Budi -> Ani (Belum dibayar) -->
+<article class="relative bg-surface-container-lowest rounded-[20px] p-space-md border border-slate-100 shadow-[0_2px_8px_-2px_rgba(15,23,42,0.04),0_8px_16px_-4px_rgba(15,23,42,0.03)] overflow-hidden">
+<div class="absolute left-0 top-0 bottom-0 w-1.5 bg-amber-500"></div>
+<!-- Top Status and Amount Header -->
+<div class="flex items-center justify-between pl-1 pb-3 border-b border-dashed border-slate-200">
+<div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-amber-50 text-amber-700 font-label-sm text-label-sm font-semibold border border-amber-200/60">
+<span class="material-symbols-outlined text-[14px]">schedule</span>
+              Belum dibayar
+            </div>
+<div class="font-amount-display text-headline-sm font-extrabold text-on-surface">
+              Rp50.000
+            </div>
+</div>
+<!-- Flow: Payer -> Recipient -->
+<div class="flex items-center justify-between pl-1 py-3.5">
+<!-- Payer -->
+<div class="flex items-center gap-2.5 min-w-0">
+<div class="relative w-11 h-11 rounded-full bg-surface-container-high border-2 border-white shadow-sm flex items-center justify-center font-bold text-primary text-sm overflow-hidden shrink-0">
+<img class="w-full h-full object-cover" data-alt="Portrait photo of a young Indonesian man smiling casually, with warm cinematic natural daylight, wearing a simple clean polo shirt, high quality clean corporate avatar style." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAlhjYqwp0YhZ1e5KPRZGsnm5aglzj5Cxo1_F875Uomi-xPFJqLP_zJ_GmCaIgGyeVJxhna6lcEtVgoSUaqzabr4YIH2xsTmQNKz9l6q5jSX8xCogmZw5FxSVgSBpLB0XbNnnBQFCFN0wyvmTnORvhBezQvAr3CszhR44Iw0CuDQZP79ZTlJzibzAPG1f0hRIRzP6wGhvz39IqGoHjfk0iGSXQiDgbW99L8LdOqdxsnEyV5pfm5JdNMGg"/>
+</div>
+<div class="flex flex-col truncate">
+<span class="font-label-sm text-label-sm text-outline">Pengirim</span>
+<span class="font-label-lg text-label-lg font-bold text-on-surface truncate">Budi</span>
+</div>
+</div>
+<!-- Directional Flow -->
+<div class="flex flex-col items-center justify-center px-2">
+<div class="w-8 h-8 rounded-full bg-surface-container flex items-center justify-center text-primary shadow-inner">
+<span class="material-symbols-outlined text-[20px]">arrow_forward</span>
+</div>
+</div>
+<!-- Recipient -->
+<div class="flex items-center gap-2.5 min-w-0 flex-row-reverse text-right">
+<div class="relative w-11 h-11 rounded-full bg-surface-container-high border-2 border-white shadow-sm flex items-center justify-center font-bold text-secondary text-sm overflow-hidden shrink-0">
+<img class="w-full h-full object-cover" data-alt="Portrait photo of a cheerful Indonesian young woman wearing a modern stylish pastel scarf, bright modern studio lighting with warm emerald accents in background, friendly avatar." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBToVsMZDUE04BdJq52vD7AK4c-SdSr9izYc3Lt52XMuNiYP8e_yo7yRFEL_-HSfPSmMfJ76jSTidu-DWl19X9uh6Vs9AQO41xGUO_IekdKNW6-Lo-tztbhluhPrP0yRXTOVrJMWnP6i5vV7fvwbgpw-OyZDmX-8KetnbiF64Wjdqze1pxsncZFZydw7BjFmW-YemO5-AjmEz5RD8C3CyWtF0f76N9uvZV5w8oXJZVWgfhNeVYoUcns_A"/>
+</div>
+<div class="flex flex-col truncate">
+<span class="font-label-sm text-label-sm text-outline">Penerima</span>
+<span class="font-label-lg text-label-lg font-bold text-on-surface truncate">Ani</span>
+</div>
+</div>
+</div>
+<!-- Action Button: Kirim Pengingat -->
+<div class="pl-1 pt-2">
+<button class="w-full min-h-[44px] flex items-center justify-center gap-2 rounded-xl bg-emerald-50 hover:bg-emerald-100 active:scale-[0.98] transition-all text-on-secondary-container font-label-lg text-label-lg font-bold border border-emerald-200/50" type="button">
+<span class="material-symbols-outlined text-[18px]">chat</span>
+              Kirim Pengingat
+            </button>
+</div>
+</article>
+<!-- Card 2: Citra -> Ani (Belum dibayar) -->
+<article class="relative bg-surface-container-lowest rounded-[20px] p-space-md border border-slate-100 shadow-[0_2px_8px_-2px_rgba(15,23,42,0.04),0_8px_16px_-4px_rgba(15,23,42,0.03)] overflow-hidden">
+<div class="absolute left-0 top-0 bottom-0 w-1.5 bg-amber-500"></div>
+<!-- Top Status and Amount Header -->
+<div class="flex items-center justify-between pl-1 pb-3 border-b border-dashed border-slate-200">
+<div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-amber-50 text-amber-700 font-label-sm text-label-sm font-semibold border border-amber-200/60">
+<span class="material-symbols-outlined text-[14px]">schedule</span>
+              Belum dibayar
+            </div>
+<div class="font-amount-display text-headline-sm font-extrabold text-on-surface">
+              Rp75.000
+            </div>
+</div>
+<!-- Flow: Payer -> Recipient -->
+<div class="flex items-center justify-between pl-1 py-3.5">
+<!-- Payer -->
+<div class="flex items-center gap-2.5 min-w-0">
+<div class="relative w-11 h-11 rounded-full bg-surface-container-high border-2 border-white shadow-sm flex items-center justify-center font-bold text-primary text-sm overflow-hidden shrink-0">
+<img class="w-full h-full object-cover" data-alt="Close up profile picture of a young professional Southeast Asian woman with subtle glasses and a warm smile, softly blurred neutral cafe backdrop, high key modern lighting." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDanfZBpC3w91E4WeEx11XXyyjxfJYsfR0uea-4YE20SWGY84B7ocXk5M0RaZHi6Zq58Xt-KCTF8oYCkQxnoiu-HaoWRNmmLNLwAFzFTgV-A18njfb6L6k1QuLsJqts8irIJU4enkT7fEKxOgopv1joKLzIDSFYSLlZIdnnN0qVpTVJfZ_Gu9ZcSu20PgwgyhBI2ldwczutkK6Jn_JazwlQJ4c_IU2Me6e9u-mid4NEbmKuBBm8BQUQTw"/>
+</div>
+<div class="flex flex-col truncate">
+<span class="font-label-sm text-label-sm text-outline">Pengirim</span>
+<span class="font-label-lg text-label-lg font-bold text-on-surface truncate">Citra</span>
+</div>
+</div>
+<!-- Directional Flow -->
+<div class="flex flex-col items-center justify-center px-2">
+<div class="w-8 h-8 rounded-full bg-surface-container flex items-center justify-center text-primary shadow-inner">
+<span class="material-symbols-outlined text-[20px]">arrow_forward</span>
+</div>
+</div>
+<!-- Recipient -->
+<div class="flex items-center gap-2.5 min-w-0 flex-row-reverse text-right">
+<div class="relative w-11 h-11 rounded-full bg-surface-container-high border-2 border-white shadow-sm flex items-center justify-center font-bold text-secondary text-sm overflow-hidden shrink-0">
+<img class="w-full h-full object-cover" data-alt="Portrait photo of a cheerful Indonesian young woman wearing a modern stylish pastel scarf, bright modern studio lighting with warm emerald accents in background, friendly avatar." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDNbVbrEN4H2O9Jot9Lq5bsbUaldx2Diy_9YNHHeXJFQtzpCMlr2ORokzrZQ_iGr2d6MY_RWo9OYNJrWljUae3Y4HEDjqRBxtKJLcQcPNc1BsXWolmf0XK5QIeoa2GMIy1XJSGH9i_T7bplHaWMB9XnsSJL1e0YUqbo6uQeUYaNmEJu_L4Pbvt3hr0b4tTyUGBSNWCEjcGFJ2_yRI5AuW20Ts5s6wuSjTsjE6L8pjIsmRawCiVAmRCMwg"/>
+</div>
+<div class="flex flex-col truncate">
+<span class="font-label-sm text-label-sm text-outline">Penerima</span>
+<span class="font-label-lg text-label-lg font-bold text-on-surface truncate">Ani</span>
+</div>
+</div>
+</div>
+<!-- Action Button: Kirim Pengingat -->
+<div class="pl-1 pt-2">
+<button class="w-full min-h-[44px] flex items-center justify-center gap-2 rounded-xl bg-emerald-50 hover:bg-emerald-100 active:scale-[0.98] transition-all text-on-secondary-container font-label-lg text-label-lg font-bold border border-emerald-200/50" type="button">
+<span class="material-symbols-outlined text-[18px]">chat</span>
+              Kirim Pengingat
+            </button>
+</div>
+</article>
+<!-- Card 3: Dimas -> Budi (Sudah dibayar) -->
+<article class="relative bg-surface-container-lowest rounded-[20px] p-space-md border border-slate-100 shadow-[0_2px_8px_-2px_rgba(15,23,42,0.04),0_8px_16px_-4px_rgba(15,23,42,0.03)] overflow-hidden opacity-95">
+<div class="absolute left-0 top-0 bottom-0 w-1.5 bg-primary-container"></div>
+<!-- Top Status and Amount Header -->
+<div class="flex items-center justify-between pl-1 pb-3 border-b border-dashed border-slate-200">
+<div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-50 text-primary font-label-sm text-label-sm font-bold border border-emerald-200/70">
+<span class="material-symbols-outlined text-[14px]" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+              Sudah dibayar
+            </div>
+<div class="font-amount-display text-headline-sm font-extrabold text-on-surface">
+              Rp25.000
+            </div>
+</div>
+<!-- Flow: Payer -> Recipient -->
+<div class="flex items-center justify-between pl-1 py-3.5">
+<!-- Payer -->
+<div class="flex items-center gap-2.5 min-w-0">
+<div class="relative w-11 h-11 rounded-full bg-surface-container-high border-2 border-white shadow-sm flex items-center justify-center font-bold text-primary text-sm overflow-hidden shrink-0">
+<img class="w-full h-full object-cover" data-alt="Portrait photography of an Indonesian young creative man in a casual navy sweater, smiling with confidence, bright ambient indoor lighting, minimal clean design portrait." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDKmbQmCIZqdFLz2cxko7bZrQd3EMFwsJbEKgFSlucqmrYk2b2mTKPMjtBXEuxLjmAKQznWiS6TumihPOPUFoBzKMqnR5n0XGhDog9gMMsS5dzzakcO5nDY7LKvDdW0Egwzlf8rGTgisTy57v0m6kan_x8f795eRpx1ld8v5xiK55dUQiupdWjhoKTv8qOjX0Vp7udyhNsvvV8KlRiwEDTZCYffgtvhU-ro2gmzNQWZcRZSL4kSSxPLuw"/>
+</div>
+<div class="flex flex-col truncate">
+<span class="font-label-sm text-label-sm text-outline">Pengirim</span>
+<span class="font-label-lg text-label-lg font-bold text-on-surface truncate">Dimas</span>
+</div>
+</div>
+<!-- Directional Flow -->
+<div class="flex flex-col items-center justify-center px-2">
+<div class="w-8 h-8 rounded-full bg-emerald-50 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-[20px]">arrow_forward</span>
+</div>
+</div>
+<!-- Recipient -->
+<div class="flex items-center gap-2.5 min-w-0 flex-row-reverse text-right">
+<div class="relative w-11 h-11 rounded-full bg-surface-container-high border-2 border-white shadow-sm flex items-center justify-center font-bold text-primary text-sm overflow-hidden shrink-0">
+<img class="w-full h-full object-cover" data-alt="Portrait photo of a young Indonesian man smiling casually, with warm cinematic natural daylight, wearing a simple clean polo shirt, high quality clean corporate avatar style." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBUK_KLpStCbV6u67HOYqmkr6bS6BlXdJZrDUQTMN3B97rkoOopuHRApWGCPwNmVgo2_EywYii6D-ze_6VbFKc-Qrm6z65BLYD268GEljKPuKQOCTRcArIdlOBx4sLSpxbhzsswq76_yIq0K21RGW94vtCW92i91dtgbYN5xJ-hIa3xv-QlxDeujzSkfr6n_Eg0wPqxTFUXqFH77PS_karmBBcQAdVZ4UDqhTLf_XVgIAgnuUZgQjASDw"/>
+</div>
+<div class="flex flex-col truncate">
+<span class="font-label-sm text-label-sm text-outline">Penerima</span>
+<span class="font-label-lg text-label-lg font-bold text-on-surface truncate">Budi</span>
+</div>
+</div>
+</div>
+<!-- Subtitle / Proof Tag -->
+<div class="pl-1 pt-1 flex items-center gap-1.5 text-on-surface-variant font-body-sm text-body-sm bg-surface-container-low px-3 py-2 rounded-xl">
+<span class="material-symbols-outlined text-[16px] text-primary" style="font-variation-settings: 'FILL' 1;">verified</span>
+<span>Lunas via QRIS / Transfer BCA</span>
+</div>
+</article>
+</div>
+</section>
+<!-- Additional Micro-info Banner -->
+<div class="flex items-center gap-3 p-3.5 rounded-2xl bg-surface-container border border-surface-variant/40 text-on-surface-variant">
+<span class="material-symbols-outlined text-[22px] text-primary shrink-0">security</span>
+<p class="font-body-sm text-body-sm leading-snug">
+        Perhitungan ini meminimalkan transfer antar anggota agar penyelesaian lebih cepat dan tanpa biaya admin tambahan.
+      </p>
+</div>
+</main>
+<!-- Sticky Bottom CTAs (Level 2 Elevation Bar) -->
+<footer class="fixed bottom-0 left-0 right-0 z-40 bg-surface-container-lowest/95 backdrop-blur-md px-margin md:px-margin-tablet py-space-md shadow-[0_-8px_24px_rgba(15,23,42,0.06)] border-t border-slate-100">
+<div class="max-w-lg mx-auto flex flex-col gap-2.5">
+<!-- Primary CTA -->
+<button class="w-full min-h-[48px] rounded-xl bg-primary-container hover:bg-primary text-white font-label-lg text-label-lg font-bold flex items-center justify-center gap-2 shadow-[0_4px_12px_rgba(16,185,129,0.3)] active:scale-[0.98] transition-all duration-150" type="button">
+<span class="material-symbols-outlined text-[20px]">receipt_long</span>
+        Lihat Riwayat Pembayaran
+      </button>
+<!-- Secondary CTA -->
+<button class="w-full min-h-[44px] rounded-xl bg-emerald-50 hover:bg-emerald-100/70 text-on-secondary-container font-label-lg text-label-lg font-bold flex items-center justify-center gap-2 border border-emerald-200/50 active:scale-[0.98] transition-all duration-150" type="button">
+<span class="material-symbols-outlined text-[20px]">ios_share</span>
+        Bagikan Rincian (PDF / WA)
+      </button>
+</div>
+</footer>
+</body></html>

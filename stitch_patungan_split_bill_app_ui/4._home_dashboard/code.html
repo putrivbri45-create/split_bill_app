@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+
+<html lang="id"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Patungan - Dashboard</title>
+<!-- Fonts & Material Symbols -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@100..900&display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "secondary-container": "#6df5e1",
+            "on-secondary-fixed": "#00201c",
+            "tertiary-fixed-dim": "#adc6ff",
+            "error-container": "#ffdad6",
+            "surface-bright": "#faf8ff",
+            "on-tertiary": "#ffffff",
+            "primary-container": "#10b981",
+            "on-secondary": "#ffffff",
+            "surface": "#faf8ff",
+            "surface-container-low": "#f2f3ff",
+            "on-error-container": "#93000a",
+            "on-primary": "#ffffff",
+            "outline-variant": "#bbcabf",
+            "error": "#ba1a1a",
+            "primary": "#006c49",
+            "tertiary": "#005ac2",
+            "on-secondary-container": "#006f64",
+            "on-primary-fixed-variant": "#005236",
+            "outline": "#6c7a71",
+            "secondary-fixed": "#71f8e4",
+            "on-surface-variant": "#3c4a42",
+            "on-secondary-fixed-variant": "#005048",
+            "surface-tint": "#006c49",
+            "inverse-surface": "#283044",
+            "surface-container-lowest": "#ffffff",
+            "secondary-fixed-dim": "#4fdbc8",
+            "surface-container": "#eaedff",
+            "primary-fixed": "#6ffbbe",
+            "on-tertiary-fixed": "#001a42",
+            "on-surface": "#131b2e",
+            "on-error": "#ffffff",
+            "primary-fixed-dim": "#4edea3",
+            "tertiary-container": "#71a1ff",
+            "on-tertiary-container": "#00367a",
+            "surface-variant": "#dae2fd",
+            "tertiary-fixed": "#d8e2ff",
+            "on-background": "#131b2e",
+            "background": "#faf8ff",
+            "secondary": "#006b5f",
+            "surface-container-highest": "#dae2fd",
+            "on-primary-container": "#00422b",
+            "surface-container-high": "#e2e7ff",
+            "surface-dim": "#d2d9f4",
+            "inverse-primary": "#4edea3",
+            "on-tertiary-fixed-variant": "#004395",
+            "on-primary-fixed": "#002113",
+            "inverse-on-surface": "#eef0ff"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "full": "9999px"
+          },
+          "spacing": {
+            "margin-tablet": "1.5rem",
+            "space-sm": "0.5rem",
+            "space-lg": "1.25rem",
+            "gutter": "1rem",
+            "gutter-mobile": "0.75rem",
+            "space-md": "1rem",
+            "margin": "1rem",
+            "space-xs": "0.25rem",
+            "space-xl": "1.75rem"
+          },
+          "fontFamily": {
+            "amount-inline": ["Plus Jakarta Sans"],
+            "body-sm": ["Plus Jakarta Sans"],
+            "headline-md": ["Plus Jakarta Sans"],
+            "amount-display": ["Plus Jakarta Sans"],
+            "headline-xl": ["Plus Jakarta Sans"],
+            "headline-sm": ["Plus Jakarta Sans"],
+            "label-lg": ["Plus Jakarta Sans"],
+            "headline-lg": ["Plus Jakarta Sans"],
+            "label-sm": ["Plus Jakarta Sans"],
+            "body-md": ["Plus Jakarta Sans"],
+            "body-lg": ["Plus Jakarta Sans"],
+            "label-md": ["Plus Jakarta Sans"],
+            "headline-xl-mobile": ["Plus Jakarta Sans"]
+          },
+          "fontSize": {
+            "amount-inline": ["15px", { "lineHeight": "20px", "fontWeight": "700" }],
+            "body-sm": ["12px", { "lineHeight": "16px", "fontWeight": "400" }],
+            "headline-md": ["20px", { "lineHeight": "28px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+            "amount-display": ["28px", { "lineHeight": "36px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+            "headline-xl": ["36px", { "lineHeight": "44px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+            "headline-sm": ["18px", { "lineHeight": "24px", "fontWeight": "600" }],
+            "label-lg": ["14px", { "lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "600" }],
+            "headline-lg": ["26px", { "lineHeight": "34px", "letterSpacing": "-0.015em", "fontWeight": "700" }],
+            "label-sm": ["11px", { "lineHeight": "14px", "letterSpacing": "0.03em", "fontWeight": "600" }],
+            "body-md": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],
+            "body-lg": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+            "label-md": ["12px", { "lineHeight": "16px", "letterSpacing": "0.02em", "fontWeight": "600" }],
+            "headline-xl-mobile": ["30px", { "lineHeight": "38px", "letterSpacing": "-0.02em", "fontWeight": "700" }]
+          }
+        }
+      }
+    };
+  </script>
+<style>
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      display: inline-block;
+      vertical-align: middle;
+      line-height: 1;
+    }
+    .material-symbols-outlined[data-weight="fill"] {
+      font-variation-settings: 'FILL' 1;
+    }
+  </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-surface antialiased min-h-screen flex flex-col justify-between selection:bg-secondary-container selection:text-on-secondary-container pb-28">
+<!-- Desktop TopAppBar / Header Bar -->
+<header class="w-full bg-surface shadow-sm sticky top-0 z-40">
+<div class="max-w-md mx-auto md:max-w-2xl px-margin md:px-margin-tablet h-16 flex justify-between items-center">
+<!-- Profile & Greetings Area -->
+<div class="flex items-center gap-space-sm">
+<div class="relative w-11 h-11 flex-shrink-0 cursor-pointer">
+<img alt="Putri" class="w-11 h-11 rounded-full object-cover ring-2 ring-surface-container-lowest shadow-sm" data-alt="A stylish young Southeast Asian professional portrait with smiling gentle expression, wearing modern minimal emerald toned casual shirt in a soft airy indoor studio lit by bright natural daylight and warm contemporary tones." src="https://lh3.googleusercontent.com/aida-public/AB6AXuC8ZMkFYyOmk89S9Mm2z7khhTlq0nxgWnUMjreMntklZRocG5BFzjPUGYM6kxQU3boOJqr060QCxJK0DUjJ_p2ZTlw4zlli-BQyDIh9OwJ9b82-IskiKPMhlvEzQ1pmLX8lrUjJBEhdCJvNa001KeCOYOfVT-Ks-V38lStyR3sEXuB7ztCNJaIwSD0j_wQ4VT21zJSd93Ra8YxMUempuPcOoS1LAok0PhCXTi3Vryf8ckpQvXqbKwn61Q"/>
+<span class="absolute bottom-0 right-0 w-3.5 h-3.5 bg-primary-container border-2 border-surface-container-lowest rounded-full"></span>
+</div>
+<div class="flex flex-col">
+<h1 class="font-headline-sm text-headline-sm text-on-surface leading-tight flex items-center gap-1">
+            Halo, Putri <span class="text-base select-none">👋</span>
+</h1>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+            Yuk cek patunganmu hari ini.
+          </p>
+</div>
+</div>
+<!-- Trailing Action: Notification Bell with Badge -->
+<div class="flex items-center gap-2">
+<button aria-label="Notifikasi" class="relative w-11 h-11 flex items-center justify-center rounded-full hover:bg-surface-container text-on-surface active:scale-95 transition-transform duration-150" type="button">
+<span class="material-symbols-outlined text-[24px]">notifications</span>
+<!-- Red Badge (3) -->
+<span class="absolute top-2 right-2 min-w-[18px] h-[18px] px-1 bg-error text-on-error font-label-sm text-[10px] leading-[18px] font-bold rounded-full flex items-center justify-center shadow-sm">
+            3
+          </span>
+</button>
+</div>
+</div>
+</header>
+<!-- Main Canvas -->
+<main class="max-w-md mx-auto md:max-w-2xl w-full px-margin md:px-margin-tablet pt-space-md space-y-space-lg flex-1">
+<!-- Section: Balance Summary Cards (Bento Grid) -->
+<section aria-label="Ringkasan Saldo" class="grid grid-cols-2 gap-space-sm">
+<!-- Card 1: Kamu harus bayar (Pay) -->
+<div class="bg-surface-container-lowest rounded-xl p-space-md shadow-sm border-l-4 border-l-error border border-surface-container flex flex-col justify-between relative overflow-hidden transition-all duration-200 hover:shadow-md">
+<div class="space-y-1">
+<div class="flex items-center justify-between">
+<span class="font-label-md text-label-md text-on-surface-variant font-medium">Kamu harus bayar</span>
+<div class="w-7 h-7 rounded-full bg-error-container/40 flex items-center justify-center text-error">
+<span class="material-symbols-outlined text-[18px]">call_made</span>
+</div>
+</div>
+<div class="pt-1">
+<span class="font-amount-display text-headline-sm md:text-amount-display font-bold text-error tracking-tight block">
+              Rp125.000
+            </span>
+</div>
+</div>
+<div class="mt-3">
+<span class="inline-flex items-center gap-1 font-label-sm text-label-sm text-on-error-container bg-error-container px-2 py-0.5 rounded-full font-semibold">
+<span class="material-symbols-outlined text-[13px]" data-weight="fill">pending_actions</span>
+            2 tagihan
+          </span>
+</div>
+</div>
+<!-- Card 2: Kamu harus terima (Receive) -->
+<div class="bg-surface-container-lowest rounded-xl p-space-md shadow-sm border-l-4 border-l-primary-container border border-surface-container flex flex-col justify-between relative overflow-hidden transition-all duration-200 hover:shadow-md">
+<div class="space-y-1">
+<div class="flex items-center justify-between">
+<span class="font-label-md text-label-md text-on-surface-variant font-medium">Kamu harus terima</span>
+<div class="w-7 h-7 rounded-full bg-secondary-container/50 flex items-center justify-center text-secondary">
+<span class="material-symbols-outlined text-[18px]">call_received</span>
+</div>
+</div>
+<div class="pt-1">
+<span class="font-amount-display text-headline-sm md:text-amount-display font-bold text-primary tracking-tight block">
+              Rp75.000
+            </span>
+</div>
+</div>
+<div class="mt-3">
+<span class="inline-flex items-center gap-1 font-label-sm text-label-sm text-on-secondary-container bg-secondary-container/60 px-2 py-0.5 rounded-full font-semibold">
+<span class="material-symbols-outlined text-[13px]" data-weight="fill">account_balance_wallet</span>
+            1 piutang
+          </span>
+</div>
+</div>
+</section>
+<!-- Quick Action Banner Buttons -->
+<section aria-label="Aksi Cepat" class="grid grid-cols-1 sm:grid-cols-2 gap-space-sm">
+<!-- Button: + Buat Grup Baru -->
+<button class="group relative w-full h-12 px-space-md bg-gradient-to-r from-primary-container to-secondary text-on-primary rounded-xl font-label-lg text-label-lg flex items-center justify-center gap-2 shadow-sm hover:shadow-md active:scale-95 transition-all duration-150" type="button">
+<span class="material-symbols-outlined text-[20px] text-on-primary">group_add</span>
+<span>+ Buat Grup Baru</span>
+</button>
+<!-- Button: Catat Pengeluaran Cepat -->
+<button class="group w-full h-12 px-space-md bg-surface-container-lowest border border-primary-container/30 text-primary rounded-xl font-label-lg text-label-lg flex items-center justify-center gap-2 hover:bg-secondary-container/20 active:scale-95 transition-all duration-150 shadow-sm" type="button">
+<span class="material-symbols-outlined text-[20px] text-primary" data-weight="fill">bolt</span>
+<span>Catat Pengeluaran Cepat</span>
+</button>
+</section>
+<!-- Section: Grup Aktif -->
+<section aria-label="Grup Aktif" class="space-y-space-sm pt-1">
+<div class="flex justify-between items-baseline px-0.5">
+<h2 class="font-headline-sm text-headline-sm text-on-surface font-bold tracking-tight">
+          Grup Aktif
+        </h2>
+<a class="font-label-md text-label-md text-primary font-semibold hover:underline flex items-center gap-0.5" href="#lihat-semua">
+          Lihat Semua
+          <span class="material-symbols-outlined text-[16px]">chevron_right</span>
+</a>
+</div>
+<div class="space-y-space-sm">
+<!-- Group Card 1: Makan Malam Reuni -->
+<article class="bg-surface-container-lowest rounded-xl p-space-md shadow-sm border border-surface-container hover:border-outline-variant transition-all duration-150 flex items-center justify-between gap-space-sm cursor-pointer active:scale-[0.99]">
+<div class="flex items-center gap-space-sm min-w-0">
+<div class="w-12 h-12 rounded-xl bg-orange-100 flex items-center justify-center text-orange-700 flex-shrink-0 text-xl shadow-xs">
+<span class="material-symbols-outlined text-[26px]">restaurant</span>
+</div>
+<div class="min-w-0 space-y-1">
+<h3 class="font-headline-sm text-[16px] text-on-surface font-semibold truncate leading-tight">
+                Makan Malam Reuni
+              </h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant flex items-center gap-1.5">
+<span>4 anggota</span>
+<span class="inline-block w-1 h-1 rounded-full bg-outline-variant"></span>
+<span>6 pengeluaran</span>
+</p>
+<div>
+<span class="inline-flex items-center font-label-sm text-[11px] text-red-700 bg-red-50 border border-red-200 px-2 py-0.5 rounded-full font-semibold">
+                  Rp125.000 harus dibayar
+                </span>
+</div>
+</div>
+</div>
+<div class="text-outline pl-1">
+<span class="material-symbols-outlined text-[22px]">chevron_right</span>
+</div>
+</article>
+<!-- Group Card 2: Liburan Jogja -->
+<article class="bg-surface-container-lowest rounded-xl p-space-md shadow-sm border border-surface-container hover:border-outline-variant transition-all duration-150 flex items-center justify-between gap-space-sm cursor-pointer active:scale-[0.99]">
+<div class="flex items-center gap-space-sm min-w-0">
+<div class="w-12 h-12 rounded-xl bg-cyan-100 flex items-center justify-center text-cyan-800 flex-shrink-0 text-xl shadow-xs">
+<span class="material-symbols-outlined text-[26px]">flight_takeoff</span>
+</div>
+<div class="min-w-0 space-y-1">
+<h3 class="font-headline-sm text-[16px] text-on-surface font-semibold truncate leading-tight">
+                Liburan Jogja
+              </h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant flex items-center gap-1.5">
+<span>5 anggota</span>
+<span class="inline-block w-1 h-1 rounded-full bg-outline-variant"></span>
+<span>12 pengeluaran</span>
+</p>
+<div>
+<span class="inline-flex items-center font-label-sm text-[11px] text-primary font-semibold bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded-full">
+                  Rp75.000 harus diterima
+                </span>
+</div>
+</div>
+</div>
+<div class="text-outline pl-1">
+<span class="material-symbols-outlined text-[22px]">chevron_right</span>
+</div>
+</article>
+<!-- Group Card 3: Kost Bulanan & Wifi -->
+<article class="bg-surface-container-lowest rounded-xl p-space-md shadow-sm border border-surface-container hover:border-outline-variant transition-all duration-150 flex items-center justify-between gap-space-sm cursor-pointer active:scale-[0.99]">
+<div class="flex items-center gap-space-sm min-w-0">
+<div class="w-12 h-12 rounded-xl bg-indigo-100 flex items-center justify-center text-indigo-700 flex-shrink-0 text-xl shadow-xs">
+<span class="material-symbols-outlined text-[26px]">home</span>
+</div>
+<div class="min-w-0 space-y-1">
+<h3 class="font-headline-sm text-[16px] text-on-surface font-semibold truncate leading-tight">
+                Kost Bulanan & Wifi
+              </h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant flex items-center gap-1.5">
+<span>3 anggota</span>
+<span class="inline-block w-1 h-1 rounded-full bg-outline-variant"></span>
+<span>4 pengeluaran</span>
+</p>
+<div>
+<span class="inline-flex items-center gap-1 font-label-sm text-[11px] text-primary font-semibold bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded-full">
+<span class="material-symbols-outlined text-[13px]" data-weight="fill">check_circle</span>
+                  Semua lunas ✓
+                </span>
+</div>
+</div>
+</div>
+<div class="text-outline pl-1">
+<span class="material-symbols-outlined text-[22px]">chevron_right</span>
+</div>
+</article>
+</div>
+</section>
+<!-- Recent Activity Teaser Card / Trust Micro-banner -->
+<section class="bg-surface-container-low rounded-xl p-space-md border border-surface-container flex items-center justify-between gap-space-sm">
+<div class="flex items-center gap-space-sm">
+<div class="w-9 h-9 rounded-full bg-secondary-container flex items-center justify-center text-on-secondary-container flex-shrink-0">
+<span class="material-symbols-outlined text-[20px]" data-weight="fill">lock_reset</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant leading-tight">
+          Perhitungan adil otomatis tanpa bunga dan tanpa biaya admin.
+        </p>
+</div>
+<button class="font-label-sm text-label-sm text-primary font-bold whitespace-nowrap hover:underline">
+        Pelajari
+      </button>
+</section>
+</main>
+<!-- Bottom Navigation Bar (Executed exactly from JSON instructions) -->
+<nav aria-label="Navigasi Utama" class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-margin py-space-xs bg-surface-container-lowest dark:bg-surface shadow-lg dark:shadow-none">
+<div class="max-w-md mx-auto w-full flex justify-around items-center">
+<!-- Home (ACTIVE STATE) -->
+<a aria-current="page" class="flex flex-col items-center justify-center bg-secondary-container dark:bg-secondary text-on-secondary-container dark:text-on-secondary rounded-full px-4 py-1 active:scale-95 transition-transform duration-150" href="#home">
+<span class="material-symbols-outlined text-[22px]" data-weight="fill">home</span>
+<span class="font-label-sm text-label-sm mt-0.5 font-bold">Home</span>
+</a>
+<!-- Grup (INACTIVE) -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-outline-variant px-4 py-1 hover:bg-surface-container-low dark:hover:bg-surface-variant hover:text-on-surface dark:hover:text-inverse-on-surface active:scale-95 transition-transform duration-150" href="#grup">
+<span class="material-symbols-outlined text-[22px]">group</span>
+<span class="font-label-sm text-label-sm mt-0.5">Grup</span>
+</a>
+<!-- Riwayat (INACTIVE) -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-outline-variant px-4 py-1 hover:bg-surface-container-low dark:hover:bg-surface-variant hover:text-on-surface dark:hover:text-inverse-on-surface active:scale-95 transition-transform duration-150" href="#riwayat">
+<span class="material-symbols-outlined text-[22px]">receipt_long</span>
+<span class="font-label-sm text-label-sm mt-0.5">Riwayat</span>
+</a>
+<!-- Profil (INACTIVE) -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-outline-variant px-4 py-1 hover:bg-surface-container-low dark:hover:bg-surface-variant hover:text-on-surface dark:hover:text-inverse-on-surface active:scale-95 transition-transform duration-150" href="#profil">
+<span class="material-symbols-outlined text-[22px]">person</span>
+<span class="font-label-sm text-label-sm mt-0.5">Profil</span>
+</a>
+</div>
+</nav>
+</body></html>

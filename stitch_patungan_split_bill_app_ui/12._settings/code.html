@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+
+<html lang="id"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Pengaturan - Patungan</title>
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "secondary-container": "#6df5e1",
+            "on-secondary-fixed": "#00201c",
+            "tertiary-fixed-dim": "#adc6ff",
+            "error-container": "#ffdad6",
+            "surface-bright": "#faf8ff",
+            "on-tertiary": "#ffffff",
+            "primary-container": "#10b981",
+            "on-secondary": "#ffffff",
+            "surface": "#faf8ff",
+            "surface-container-low": "#f2f3ff",
+            "on-error-container": "#93000a",
+            "on-primary": "#ffffff",
+            "outline-variant": "#bbcabf",
+            "error": "#ba1a1a",
+            "primary": "#006c49",
+            "tertiary": "#005ac2",
+            "on-secondary-container": "#006f64",
+            "on-primary-fixed-variant": "#005236",
+            "outline": "#6c7a71",
+            "secondary-fixed": "#71f8e4",
+            "on-surface-variant": "#3c4a42",
+            "on-secondary-fixed-variant": "#005048",
+            "surface-tint": "#006c49",
+            "inverse-surface": "#283044",
+            "surface-container-lowest": "#ffffff",
+            "secondary-fixed-dim": "#4fdbc8",
+            "surface-container": "#eaedff",
+            "primary-fixed": "#6ffbbe",
+            "on-tertiary-fixed": "#001a42",
+            "on-surface": "#131b2e",
+            "on-error": "#ffffff",
+            "primary-fixed-dim": "#4edea3",
+            "tertiary-container": "#71a1ff",
+            "on-tertiary-container": "#00367a",
+            "surface-variant": "#dae2fd",
+            "tertiary-fixed": "#d8e2ff",
+            "on-background": "#131b2e",
+            "background": "#faf8ff",
+            "secondary": "#006b5f",
+            "surface-container-highest": "#dae2fd",
+            "on-primary-container": "#00422b",
+            "surface-container-high": "#e2e7ff",
+            "surface-dim": "#d2d9f4",
+            "inverse-primary": "#4edea3",
+            "on-tertiary-fixed-variant": "#004395",
+            "on-primary-fixed": "#002113",
+            "inverse-on-surface": "#eef0ff"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "full": "9999px"
+          },
+          "spacing": {
+            "margin-tablet": "1.5rem",
+            "space-sm": "0.5rem",
+            "space-lg": "1.25rem",
+            "gutter": "1rem",
+            "gutter-mobile": "0.75rem",
+            "space-md": "1rem",
+            "margin": "1rem",
+            "space-xs": "0.25rem",
+            "space-xl": "1.75rem"
+          },
+          "fontFamily": {
+            "amount-inline": ["Plus Jakarta Sans"],
+            "body-sm": ["Plus Jakarta Sans"],
+            "headline-md": ["Plus Jakarta Sans"],
+            "amount-display": ["Plus Jakarta Sans"],
+            "headline-xl": ["Plus Jakarta Sans"],
+            "headline-sm": ["Plus Jakarta Sans"],
+            "label-lg": ["Plus Jakarta Sans"],
+            "headline-lg": ["Plus Jakarta Sans"],
+            "label-sm": ["Plus Jakarta Sans"],
+            "body-md": ["Plus Jakarta Sans"],
+            "body-lg": ["Plus Jakarta Sans"],
+            "label-md": ["Plus Jakarta Sans"],
+            "headline-xl-mobile": ["Plus Jakarta Sans"]
+          },
+          "fontSize": {
+            "amount-inline": ["15px", { "lineHeight": "20px", "fontWeight": "700" }],
+            "body-sm": ["12px", { "lineHeight": "16px", "fontWeight": "400" }],
+            "headline-md": ["20px", { "lineHeight": "28px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+            "amount-display": ["28px", { "lineHeight": "36px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+            "headline-xl": ["36px", { "lineHeight": "44px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+            "headline-sm": ["18px", { "lineHeight": "24px", "fontWeight": "600" }],
+            "label-lg": ["14px", { "lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "600" }],
+            "headline-lg": ["26px", { "lineHeight": "34px", "letterSpacing": "-0.015em", "fontWeight": "700" }],
+            "label-sm": ["11px", { "lineHeight": "14px", "letterSpacing": "0.03em", "fontWeight": "600" }],
+            "body-md": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],
+            "body-lg": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+            "label-md": ["12px", { "lineHeight": "16px", "letterSpacing": "0.02em", "fontWeight": "600" }],
+            "headline-xl-mobile": ["30px", { "lineHeight": "38px", "letterSpacing": "-0.02em", "fontWeight": "700" }]
+          }
+        }
+      }
+    }
+  </script>
+<style>
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    }
+    /* Smooth toggle animation styles */
+    .toggle-checkbox:checked {
+      right: 0;
+      border-color: #10b981;
+    }
+    .toggle-checkbox:checked + .toggle-label {
+      background-color: #10b981;
+    }
+  </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-surface antialiased min-h-screen pb-28 font-body-md text-body-md select-none">
+<!-- Top App Bar (Shared Component Style Anchor) -->
+<header class="sticky top-0 z-40 bg-surface dark:bg-surface shadow-sm dark:shadow-none">
+<div class="flex justify-between items-center w-full px-margin md:px-margin-tablet h-14 max-w-2xl mx-auto">
+<div class="flex items-center space-x-3">
+<button aria-label="Kembali" class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-surface-container active:scale-95 transition-transform duration-150 text-primary dark:text-inverse-primary" type="button">
+<span class="material-symbols-outlined" data-icon="arrow_back">arrow_back</span>
+</button>
+<h1 class="text-headline-sm font-headline-sm font-bold text-on-surface">Pengaturan</h1>
+</div>
+<div class="flex items-center space-x-1">
+<button aria-label="Cari" class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-surface-container active:scale-95 transition-transform duration-150 text-on-surface-variant" type="button">
+<span class="material-symbols-outlined" data-icon="search">search</span>
+</button>
+<button aria-label="Notifikasi" class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-surface-container active:scale-95 transition-transform duration-150 text-on-surface-variant relative" type="button">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+<span class="absolute top-2.5 right-2.5 w-2 h-2 rounded-full bg-primary-container"></span>
+</button>
+</div>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="max-w-2xl mx-auto px-margin md:px-margin-tablet pt-4 space-y-5">
+<!-- Section 1: Akun -->
+<section class="space-y-2">
+<div class="px-1 flex items-center justify-between">
+<h2 class="text-label-md font-label-md font-bold text-outline uppercase tracking-wider">Akun</h2>
+<span class="text-label-sm font-label-sm text-primary font-bold">Terverifikasi</span>
+</div>
+<div class="bg-surface-container-lowest rounded-xl shadow-sm border border-surface-container overflow-hidden">
+<!-- Edit Profil -->
+<a class="flex items-center justify-between p-4 hover:bg-surface-container-low transition-colors duration-150 group" href="#edit-profil">
+<div class="flex items-center space-x-3.5">
+<div class="relative w-12 h-12 rounded-full ring-2 ring-primary-container p-0.5 bg-surface-container-low flex-shrink-0">
+<img class="w-full h-full object-cover rounded-full" data-alt="A clean portrait of an Indonesian professional user with friendly expression, captured with soft natural daylight against a neutral modern office background with green subtle foliage tones. High aesthetic quality and sharp detail." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAFj579uCMlSEKnIoOb1DsR3Ahcu3Jhd3v4uthkWzfgG9dnMO3eBzkEA13ZSOzT9L-H1m-KJOK_amge49fSGnyerT4wHVRb7nut8h1Fc0V2zOapq4OYtIb0OyOw2ggqyHc3xHAIech2I8vKk9f0auVvVKEdAY5S2oflWDwfhQIlf7AekCZx2z4gQkkzaVrH2n-v5Tywja9x3sfwSf6etqUxxEE9avLxE6Fp0rh00-rqz5REGQdxoylbFw"/>
+<div class="absolute bottom-0 right-0 bg-primary-container text-on-primary rounded-full p-0.5 border-2 border-surface-container-lowest flex items-center justify-center">
+<span class="material-symbols-outlined text-[10px]" data-icon="check">check</span>
+</div>
+</div>
+<div>
+<p class="text-label-lg font-label-lg font-bold text-on-surface group-hover:text-primary transition-colors">Raditya Ardiansyah</p>
+<p class="text-body-sm font-body-sm text-on-surface-variant">raditya.ardiansyah@email.com</p>
+</div>
+</div>
+<div class="flex items-center text-outline">
+<span class="material-symbols-outlined group-hover:translate-x-0.5 transition-transform" data-icon="chevron_right">chevron_right</span>
+</div>
+</a>
+<div class="h-[1px] bg-surface-container mx-4"></div>
+<!-- Keamanan & Ubah Password -->
+<div class="p-4 flex flex-col space-y-3">
+<a class="flex items-center justify-between group" href="#keamanan">
+<div class="flex items-center space-x-3">
+<div class="w-10 h-10 rounded-xl bg-surface-container-low flex items-center justify-center text-primary">
+<span class="material-symbols-outlined" data-icon="shield_lock">shield_lock</span>
+</div>
+<div>
+<p class="text-label-lg font-label-lg font-bold text-on-surface group-hover:text-primary transition-colors">Keamanan &amp; Ubah Password</p>
+<p class="text-body-sm font-body-sm text-on-surface-variant">PIN transaksi, Password &amp; 2FA</p>
+</div>
+</div>
+<span class="material-symbols-outlined text-outline group-hover:translate-x-0.5 transition-transform" data-icon="chevron_right">chevron_right</span>
+</a>
+<!-- Sub-item: PIN / Biometrik toggle -->
+<div class="flex items-center justify-between pt-2 pl-12 pr-1 border-t border-dashed border-outline-variant/30">
+<div class="flex items-center space-x-2">
+<span class="material-symbols-outlined text-outline text-[20px]" data-icon="fingerprint">fingerprint</span>
+<span class="text-label-md font-label-md text-on-surface font-medium">Masuk Cepat &amp; PIN Biometrik</span>
+</div>
+<label class="relative inline-flex items-center cursor-pointer">
+<input checked="" class="sr-only peer" type="checkbox"/>
+<div class="w-11 h-6 bg-outline-variant/50 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary-container"></div>
+</label>
+</div>
+</div>
+</div>
+</section>
+<!-- Dedicated Group Preview Widget: Grup Saya -->
+<section class="space-y-2">
+<div class="px-1 flex items-center justify-between">
+<h2 class="text-label-md font-label-md font-bold text-outline uppercase tracking-wider">Grup Saya</h2>
+<a class="text-label-sm font-label-sm font-bold text-primary hover:underline flex items-center" href="#grup">
+          Lihat Semua (4)
+          <span class="material-symbols-outlined text-[16px] ml-0.5" data-icon="chevron_right">chevron_right</span>
+</a>
+</div>
+<div class="grid grid-cols-2 gap-3">
+<!-- Group Card 1 -->
+<div class="bg-surface-container-lowest p-3.5 rounded-xl border border-surface-container relative overflow-hidden shadow-sm flex flex-col justify-between">
+<div class="absolute left-0 top-0 bottom-0 w-1 bg-primary-container"></div>
+<div>
+<div class="flex items-center justify-between mb-2">
+<span class="text-xs bg-primary-container/15 text-primary font-bold px-2 py-0.5 rounded-full">Kost Melati</span>
+<span class="material-symbols-outlined text-outline text-[16px]" data-icon="diversity_3">diversity_3</span>
+</div>
+<p class="text-label-md font-label-md text-on-surface font-bold truncate">Listrik &amp; WiFi Bulanan</p>
+<p class="text-body-sm font-body-sm text-primary font-semibold mt-1">Kamu ditagih Rp 125.000</p>
+</div>
+<div class="flex items-center justify-between mt-3 pt-2 border-t border-surface-container">
+<div class="flex -space-x-1.5 overflow-hidden">
+<div class="w-5 h-5 rounded-full bg-secondary-container text-on-secondary-container text-[9px] flex items-center justify-center font-bold">BK</div>
+<div class="w-5 h-5 rounded-full bg-surface-container-high text-on-surface text-[9px] flex items-center justify-center font-bold">DA</div>
+<div class="w-5 h-5 rounded-full bg-primary-fixed text-on-primary-fixed text-[9px] flex items-center justify-center font-bold">+2</div>
+</div>
+<span class="text-[10px] text-outline">Aktif 2j lalu</span>
+</div>
+</div>
+<!-- Group Card 2 -->
+<div class="bg-surface-container-lowest p-3.5 rounded-xl border border-surface-container relative overflow-hidden shadow-sm flex flex-col justify-between">
+<div class="absolute left-0 top-0 bottom-0 w-1 bg-secondary"></div>
+<div>
+<div class="flex items-center justify-between mb-2">
+<span class="text-xs bg-secondary-fixed/50 text-on-secondary-container font-bold px-2 py-0.5 rounded-full">Trip Bali</span>
+<span class="material-symbols-outlined text-outline text-[16px]" data-icon="flight_takeoff">flight_takeoff</span>
+</div>
+<p class="text-label-md font-label-md text-on-surface font-bold truncate">Villa &amp; Rental Mobil</p>
+<p class="text-body-sm font-body-sm text-outline font-semibold mt-1">Lunas (Selesai)</p>
+</div>
+<div class="flex items-center justify-between mt-3 pt-2 border-t border-surface-container">
+<div class="flex -space-x-1.5 overflow-hidden">
+<div class="w-5 h-5 rounded-full bg-tertiary-fixed text-on-tertiary-fixed text-[9px] flex items-center justify-center font-bold">R</div>
+<div class="w-5 h-5 rounded-full bg-primary-fixed-dim text-on-primary-fixed-variant text-[9px] flex items-center justify-center font-bold">S</div>
+<div class="w-5 h-5 rounded-full bg-surface-container-highest text-on-surface text-[9px] flex items-center justify-center font-bold">+4</div>
+</div>
+<span class="text-[10px] text-outline">Settled</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Section 2: Preferensi -->
+<section class="space-y-2">
+<div class="px-1">
+<h2 class="text-label-md font-label-md font-bold text-outline uppercase tracking-wider">Preferensi</h2>
+</div>
+<div class="bg-surface-container-lowest rounded-xl shadow-sm border border-surface-container divide-y divide-surface-container overflow-hidden">
+<!-- Mata Uang -->
+<div class="flex items-center justify-between p-4 hover:bg-surface-container-low transition-colors duration-150 cursor-pointer group">
+<div class="flex items-center space-x-3">
+<div class="w-10 h-10 rounded-xl bg-surface-container-low flex items-center justify-center text-primary">
+<span class="material-symbols-outlined" data-icon="payments">payments</span>
+</div>
+<div>
+<p class="text-label-lg font-label-lg font-bold text-on-surface">Mata Uang</p>
+<p class="text-body-sm font-body-sm text-on-surface-variant">Default perhitungan tagihan</p>
+</div>
+</div>
+<div class="flex items-center space-x-1.5">
+<span class="text-label-md font-label-md font-bold text-primary bg-primary-container/10 px-2.5 py-1 rounded-lg">IDR (Rp)</span>
+<span class="material-symbols-outlined text-outline group-hover:translate-x-0.5 transition-transform" data-icon="navigate_next">navigate_next</span>
+</div>
+</div>
+<!-- Bahasa -->
+<div class="flex items-center justify-between p-4 hover:bg-surface-container-low transition-colors duration-150 cursor-pointer group">
+<div class="flex items-center space-x-3">
+<div class="w-10 h-10 rounded-xl bg-surface-container-low flex items-center justify-center text-primary">
+<span class="material-symbols-outlined" data-icon="translate">translate</span>
+</div>
+<div>
+<p class="text-label-lg font-label-lg font-bold text-on-surface">Bahasa</p>
+<p class="text-body-sm font-body-sm text-on-surface-variant">Bahasa tampilan antarmuka</p>
+</div>
+</div>
+<div class="flex items-center space-x-1.5">
+<span class="text-body-md font-body-md text-on-surface-variant font-medium">Bahasa Indonesia</span>
+<span class="material-symbols-outlined text-outline group-hover:translate-x-0.5 transition-transform" data-icon="navigate_next">navigate_next</span>
+</div>
+</div>
+<!-- Format Angka -->
+<div class="flex items-center justify-between p-4 hover:bg-surface-container-low transition-colors duration-150 cursor-pointer group">
+<div class="flex items-center space-x-3">
+<div class="w-10 h-10 rounded-xl bg-surface-container-low flex items-center justify-center text-primary">
+<span class="material-symbols-outlined" data-icon="pin">pin</span>
+</div>
+<div>
+<p class="text-label-lg font-label-lg font-bold text-on-surface">Format Angka</p>
+<p class="text-body-sm font-body-sm text-on-surface-variant">Pemisah desimal &amp; ribuan</p>
+</div>
+</div>
+<div class="flex items-center space-x-1.5">
+<span class="text-body-md font-body-md text-on-surface-variant font-mono">100.000 (Titik ribuan)</span>
+<span class="material-symbols-outlined text-outline group-hover:translate-x-0.5 transition-transform" data-icon="navigate_next">navigate_next</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Section 3: Notifikasi -->
+<section class="space-y-2">
+<div class="px-1">
+<h2 class="text-label-md font-label-md font-bold text-outline uppercase tracking-wider">Notifikasi</h2>
+</div>
+<div class="bg-surface-container-lowest rounded-xl shadow-sm border border-surface-container divide-y divide-surface-container overflow-hidden">
+<!-- Notifikasi Push (ON #10B981) -->
+<div class="flex items-center justify-between p-4">
+<div class="flex items-center space-x-3 pr-2">
+<div class="w-10 h-10 rounded-xl bg-surface-container-low flex items-center justify-center text-primary">
+<span class="material-symbols-outlined" data-icon="notifications_active">notifications_active</span>
+</div>
+<div>
+<p class="text-label-lg font-label-lg font-bold text-on-surface">Notifikasi Push</p>
+<p class="text-body-sm font-body-sm text-on-surface-variant">Pemberitahuan aktivitas grup langsung</p>
+</div>
+</div>
+<label class="relative inline-flex items-center cursor-pointer flex-shrink-0">
+<input checked="" class="sr-only peer" type="checkbox"/>
+<div class="w-11 h-6 bg-outline-variant/50 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary-container"></div>
+</label>
+</div>
+<!-- Pengingat Pembayaran Otomatis (ON #10B981) -->
+<div class="flex items-center justify-between p-4">
+<div class="flex items-center space-x-3 pr-2">
+<div class="w-10 h-10 rounded-xl bg-surface-container-low flex items-center justify-center text-primary">
+<span class="material-symbols-outlined" data-icon="alarm">alarm</span>
+</div>
+<div>
+<p class="text-label-lg font-label-lg font-bold text-on-surface">Pengingat Pembayaran Otomatis</p>
+<p class="text-body-sm font-body-sm text-on-surface-variant">Kirim pengingat ramah H-1 jatuh tempo</p>
+</div>
+</div>
+<label class="relative inline-flex items-center cursor-pointer flex-shrink-0">
+<input checked="" class="sr-only peer" type="checkbox"/>
+<div class="w-11 h-6 bg-outline-variant/50 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary-container"></div>
+</label>
+</div>
+<!-- Notifikasi Email (OFF) -->
+<div class="flex items-center justify-between p-4">
+<div class="flex items-center space-x-3 pr-2">
+<div class="w-10 h-10 rounded-xl bg-surface-container-low flex items-center justify-center text-on-surface-variant">
+<span class="material-symbols-outlined" data-icon="mail">mail</span>
+</div>
+<div>
+<p class="text-label-lg font-label-lg font-bold text-on-surface">Notifikasi Email</p>
+<p class="text-body-sm font-body-sm text-on-surface-variant">Ringkasan tagihan mingguan ke email</p>
+</div>
+</div>
+<label class="relative inline-flex items-center cursor-pointer flex-shrink-0">
+<input class="sr-only peer" type="checkbox"/>
+<div class="w-11 h-6 bg-outline-variant/50 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary-container"></div>
+</label>
+</div>
+</div>
+</section>
+<!-- Section 4: Lainnya & Dukungan -->
+<section class="space-y-2">
+<div class="px-1">
+<h2 class="text-label-md font-label-md font-bold text-outline uppercase tracking-wider">Lainnya &amp; Dukungan</h2>
+</div>
+<div class="bg-surface-container-lowest rounded-xl shadow-sm border border-surface-container divide-y divide-surface-container overflow-hidden">
+<!-- Tentang Patungan -->
+<div class="flex items-center justify-between p-4 hover:bg-surface-container-low transition-colors duration-150 cursor-pointer group">
+<div class="flex items-center space-x-3">
+<div class="w-10 h-10 rounded-xl bg-surface-container-low flex items-center justify-center text-primary">
+<span class="material-symbols-outlined" data-icon="info">info</span>
+</div>
+<div>
+<p class="text-label-lg font-label-lg font-bold text-on-surface">Tentang Patungan</p>
+<p class="text-body-sm font-body-sm text-on-surface-variant">Versi aplikasi dan changelog</p>
+</div>
+</div>
+<div class="flex items-center space-x-1.5">
+<span class="text-label-sm font-label-sm font-semibold bg-surface-container px-2 py-0.5 rounded text-on-surface-variant">Versi 2.4.0</span>
+<span class="material-symbols-outlined text-outline group-hover:translate-x-0.5 transition-transform" data-icon="navigate_next">navigate_next</span>
+</div>
+</div>
+<!-- Kebijakan Privasi & Syarat Ketentuan -->
+<a class="flex items-center justify-between p-4 hover:bg-surface-container-low transition-colors duration-150 group" href="#kebijakan">
+<div class="flex items-center space-x-3">
+<div class="w-10 h-10 rounded-xl bg-surface-container-low flex items-center justify-center text-primary">
+<span class="material-symbols-outlined" data-icon="gavel">gavel</span>
+</div>
+<div>
+<p class="text-label-lg font-label-lg font-bold text-on-surface">Kebijakan Privasi &amp; Syarat Ketentuan</p>
+<p class="text-body-sm font-body-sm text-on-surface-variant">Ketentuan layanan &amp; proteksi data</p>
+</div>
+</div>
+<span class="material-symbols-outlined text-outline group-hover:translate-x-0.5 transition-transform" data-icon="navigate_next">navigate_next</span>
+</a>
+<!-- Pusat Bantuan & Hubungi CS -->
+<a class="flex items-center justify-between p-4 hover:bg-surface-container-low transition-colors duration-150 group" href="#bantuan">
+<div class="flex items-center space-x-3">
+<div class="w-10 h-10 rounded-xl bg-surface-container-low flex items-center justify-center text-primary">
+<span class="material-symbols-outlined" data-icon="support_agent">support_agent</span>
+</div>
+<div>
+<p class="text-label-lg font-label-lg font-bold text-on-surface">Pusat Bantuan &amp; Hubungi CS</p>
+<p class="text-body-sm font-body-sm text-on-surface-variant">FAQ, panduan &amp; respon 24/7</p>
+</div>
+</div>
+<span class="material-symbols-outlined text-outline group-hover:translate-x-0.5 transition-transform" data-icon="navigate_next">navigate_next</span>
+</a>
+</div>
+</section>
+<!-- Bottom Container: Keluar Action -->
+<div class="pt-2 pb-6">
+<button class="w-full h-12 rounded-xl border border-error text-error hover:bg-error-container/20 active:scale-[0.99] transition-all duration-150 font-label-lg text-label-lg font-bold flex items-center justify-center space-x-2" type="button">
+<span class="material-symbols-outlined text-[20px]" data-icon="logout">logout</span>
+<span>Keluar (Logout)</span>
+</button>
+<p class="text-center text-label-sm font-label-sm text-outline mt-3">ID Akun: PTG-8921-9920</p>
+</div>
+</main>
+<!-- Bottom Navigation Bar (Shared Component Semantic Blueprint) -->
+<!-- Contextual Lock: On 'Pengaturan' screen under Account ecosystem, active tab maps strictly to 'Profil' -->
+<nav aria-label="Navigasi Utama" class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-margin py-space-xs bg-surface-container-lowest dark:bg-surface shadow-lg dark:shadow-none">
+<!-- Tab 1: Home -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-outline-variant px-4 py-1 hover:bg-surface-container-low dark:hover:bg-surface-variant hover:text-on-surface active:scale-95 transition-transform duration-150" href="#home">
+<span class="material-symbols-outlined" data-icon="home">home</span>
+<span class="text-label-sm font-label-sm mt-0.5">Home</span>
+</a>
+<!-- Tab 2: Grup -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-outline-variant px-4 py-1 hover:bg-surface-container-low dark:hover:bg-surface-variant hover:text-on-surface active:scale-95 transition-transform duration-150" href="#grup">
+<span class="material-symbols-outlined" data-icon="group">group</span>
+<span class="text-label-sm font-label-sm mt-0.5">Grup</span>
+</a>
+<!-- Tab 3: Riwayat -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-outline-variant px-4 py-1 hover:bg-surface-container-low dark:hover:bg-surface-variant hover:text-on-surface active:scale-95 transition-transform duration-150" href="#riwayat">
+<span class="material-symbols-outlined" data-icon="receipt_long">receipt_long</span>
+<span class="text-label-sm font-label-sm mt-0.5">Riwayat</span>
+</a>
+<!-- Tab 4: Profil (ACTIVE: Setting Screen belongs directly under Profile category) -->
+<a aria-current="page" class="flex flex-col items-center justify-center bg-secondary-container dark:bg-secondary text-on-secondary-container dark:text-on-secondary rounded-full px-4 py-1 active:scale-95 transition-transform duration-150" href="#profil">
+<span class="material-symbols-outlined" data-icon="person" style="font-variation-settings: 'FILL' 1;">person</span>
+<span class="text-label-sm font-label-sm font-bold mt-0.5">Profil</span>
+</a>
+</nav>
+</body></html>

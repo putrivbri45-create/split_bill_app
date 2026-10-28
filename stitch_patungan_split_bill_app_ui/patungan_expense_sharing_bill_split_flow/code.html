@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+
+<html class="light" lang="id"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Patungan - Biar adil, nggak ribet.</title>
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300..800;1,300..800&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS with Plugins -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Tailwind Configuration verbatim -->
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "secondary-container": "#6df5e1",
+            "on-secondary-fixed": "#00201c",
+            "tertiary-fixed-dim": "#adc6ff",
+            "error-container": "#ffdad6",
+            "surface-bright": "#faf8ff",
+            "on-tertiary": "#ffffff",
+            "primary-container": "#10b981",
+            "on-secondary": "#ffffff",
+            "surface": "#faf8ff",
+            "surface-container-low": "#f2f3ff",
+            "on-error-container": "#93000a",
+            "on-primary": "#ffffff",
+            "outline-variant": "#bbcabf",
+            "error": "#ba1a1a",
+            "primary": "#006c49",
+            "tertiary": "#005ac2",
+            "on-secondary-container": "#006f64",
+            "on-primary-fixed-variant": "#005236",
+            "outline": "#6c7a71",
+            "secondary-fixed": "#71f8e4",
+            "on-surface-variant": "#3c4a42",
+            "on-secondary-fixed-variant": "#005048",
+            "surface-tint": "#006c49",
+            "inverse-surface": "#283044",
+            "surface-container-lowest": "#ffffff",
+            "secondary-fixed-dim": "#4fdbc8",
+            "surface-container": "#eaedff",
+            "primary-fixed": "#6ffbbe",
+            "on-tertiary-fixed": "#001a42",
+            "on-surface": "#131b2e",
+            "on-error": "#ffffff",
+            "primary-fixed-dim": "#4edea3",
+            "tertiary-container": "#71a1ff",
+            "on-tertiary-container": "#00367a",
+            "surface-variant": "#dae2fd",
+            "tertiary-fixed": "#d8e2ff",
+            "on-background": "#131b2e",
+            "background": "#faf8ff",
+            "secondary": "#006b5f",
+            "surface-container-highest": "#dae2fd",
+            "on-primary-container": "#00422b",
+            "surface-container-high": "#e2e7ff",
+            "surface-dim": "#d2d9f4",
+            "inverse-primary": "#4edea3",
+            "on-tertiary-fixed-variant": "#004395",
+            "on-primary-fixed": "#002113",
+            "inverse-on-surface": "#eef0ff"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "full": "9999px"
+          },
+          "spacing": {
+            "margin-tablet": "1.5rem",
+            "space-sm": "0.5rem",
+            "space-lg": "1.25rem",
+            "gutter": "1rem",
+            "gutter-mobile": "0.75rem",
+            "space-md": "1rem",
+            "margin": "1rem",
+            "space-xs": "0.25rem",
+            "space-xl": "1.75rem"
+          },
+          "fontFamily": {
+            "amount-inline": [
+              "Plus Jakarta Sans"
+            ],
+            "body-sm": [
+              "Plus Jakarta Sans"
+            ],
+            "headline-md": [
+              "Plus Jakarta Sans"
+            ],
+            "amount-display": [
+              "Plus Jakarta Sans"
+            ],
+            "headline-xl": [
+              "Plus Jakarta Sans"
+            ],
+            "headline-sm": [
+              "Plus Jakarta Sans"
+            ],
+            "label-lg": [
+              "Plus Jakarta Sans"
+            ],
+            "headline-lg": [
+              "Plus Jakarta Sans"
+            ],
+            "label-sm": [
+              "Plus Jakarta Sans"
+            ],
+            "body-md": [
+              "Plus Jakarta Sans"
+            ],
+            "body-lg": [
+              "Plus Jakarta Sans"
+            ],
+            "label-md": [
+              "Plus Jakarta Sans"
+            ],
+            "headline-xl-mobile": [
+              "Plus Jakarta Sans"
+            ]
+          },
+          "fontSize": {
+            "amount-inline": [
+              "15px",
+              {
+                "lineHeight": "20px",
+                "fontWeight": "700"
+              }
+            ],
+            "body-sm": [
+              "12px",
+              {
+                "lineHeight": "16px",
+                "fontWeight": "400"
+              }
+            ],
+            "headline-md": [
+              "20px",
+              {
+                "lineHeight": "28px",
+                "letterSpacing": "-0.01em",
+                "fontWeight": "600"
+              }
+            ],
+            "amount-display": [
+              "28px",
+              {
+                "lineHeight": "36px",
+                "letterSpacing": "-0.02em",
+                "fontWeight": "700"
+              }
+            ],
+            "headline-xl": [
+              "36px",
+              {
+                "lineHeight": "44px",
+                "letterSpacing": "-0.02em",
+                "fontWeight": "700"
+              }
+            ],
+            "headline-sm": [
+              "18px",
+              {
+                "lineHeight": "24px",
+                "fontWeight": "600"
+              }
+            ],
+            "label-lg": [
+              "14px",
+              {
+                "lineHeight": "20px",
+                "letterSpacing": "0.01em",
+                "fontWeight": "600"
+              }
+            ],
+            "headline-lg": [
+              "26px",
+              {
+                "lineHeight": "34px",
+                "letterSpacing": "-0.015em",
+                "fontWeight": "700"
+              }
+            ],
+            "label-sm": [
+              "11px",
+              {
+                "lineHeight": "14px",
+                "letterSpacing": "0.03em",
+                "fontWeight": "600"
+              }
+            ],
+            "body-md": [
+              "14px",
+              {
+                "lineHeight": "20px",
+                "fontWeight": "400"
+              }
+            ],
+            "body-lg": [
+              "16px",
+              {
+                "lineHeight": "24px",
+                "fontWeight": "400"
+              }
+            ],
+            "label-md": [
+              "12px",
+              {
+                "lineHeight": "16px",
+                "letterSpacing": "0.02em",
+                "fontWeight": "600"
+              }
+            ],
+            "headline-xl-mobile": [
+              "30px",
+              {
+                "lineHeight": "38px",
+                "letterSpacing": "-0.02em",
+                "fontWeight": "700"
+              }
+            ]
+          }
+        },
+      },
+    }
+  </script>
+<style>
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    }
+    @keyframes pulse-subtle {
+      0%, 100% {
+        opacity: 0.35;
+        transform: scale(1);
+      }
+      50% {
+        opacity: 0.85;
+        transform: scale(1.06);
+      }
+    }
+    @keyframes dot-bounce {
+      0%, 80%, 100% {
+        transform: translateY(0);
+      }
+      40% {
+        transform: translateY(-5px);
+      }
+    }
+    .animate-pulse-subtle {
+      animation: pulse-subtle 4s ease-in-out infinite;
+    }
+    .dot-1 {
+      animation: dot-bounce 1.4s infinite ease-in-out both;
+    }
+    .dot-2 {
+      animation: dot-bounce 1.4s infinite ease-in-out both;
+      animation-delay: 0.2s;
+    }
+    .dot-3 {
+      animation: dot-bounce 1.4s infinite ease-in-out both;
+      animation-delay: 0.4s;
+    }
+  </style>
+</head>
+<body class="bg-background text-on-surface antialiased min-h-screen flex flex-col justify-between items-center relative overflow-hidden selection:bg-secondary-container selection:text-on-secondary-container">
+<!-- Ambient Mint & Emerald Decorative Blurs -->
+<div class="pointer-events-none absolute inset-0 overflow-hidden z-0">
+<div class="absolute -top-24 -left-20 w-80 h-80 rounded-full bg-secondary-container/30 blur-3xl animate-pulse-subtle"></div>
+<div class="absolute top-1/3 -right-28 w-96 h-96 rounded-full bg-primary-fixed/30 blur-3xl animate-pulse-subtle" style="animation-delay: 1.5s;"></div>
+<div class="absolute -bottom-20 left-1/4 w-80 h-80 rounded-full bg-secondary-fixed/25 blur-3xl animate-pulse-subtle" style="animation-delay: 2.5s;"></div>
+</div>
+<!-- Header safe clearance / Top Anchor -->
+<header class="w-full pt-8 px-margin md:px-margin-tablet flex justify-between items-center z-10 opacity-70">
+<div class="flex items-center gap-space-xs">
+<span class="w-2 h-2 rounded-full bg-primary"></span>
+<span class="font-label-sm text-label-sm text-on-surface-variant tracking-wider uppercase">Patungan ID</span>
+</div>
+<div class="flex items-center gap-1 text-on-surface-variant">
+<span class="material-symbols-outlined text-[18px]">verified_user</span>
+<span class="font-label-sm text-label-sm">Aman &amp; Terenkripsi</span>
+</div>
+</header>
+<!-- Centered Hero Brand Section -->
+<main class="relative z-10 w-full max-w-sm px-margin flex flex-col items-center justify-center my-auto text-center">
+<!-- Glowing Brand Icon Shield -->
+<div class="relative mb-space-lg group">
+<!-- Glow ambient halo -->
+<div class="absolute -inset-2 bg-gradient-to-tr from-primary-container to-secondary-container rounded-3xl blur-xl opacity-50 group-hover:opacity-75 transition-opacity duration-500"></div>
+<!-- Primary Logo Holder -->
+<div class="relative w-28 h-28 md:w-32 md:h-32 bg-surface-container-lowest rounded-2xl p-4 shadow-[0_12px_24px_-6px_rgba(16,185,129,0.2),0_4px_12px_-2px_rgba(15,23,42,0.06)] border border-outline-variant/30 flex items-center justify-center">
+<img alt="Logo Patungan" class="w-full h-full object-contain drop-shadow-sm select-none" src="https://lh3.googleusercontent.com/aida/AEtjO1WHI2ArbUI0td3htktJB54Hovr2x-JhTaIWGATV7NViWN_f0cEnnR5djyHgCh252g8QXHJMiyVQJ1xHt5ieETaCpD7rYvuS6b85IReoCKsAwQGh2zX2ry6UpugOjRsme49MH8zKKBKepBfv78pWwR2iJUv16JJDMBwaUEVhaNvsjvNU1EJvHjNznEjUNTo8Dd_54W-RU5zcKSIiU7_Vh0wJHvMXFyGPkUmesTyTHESj2En3jI6q0M2Q8Evq"/>
+</div>
+</div>
+<!-- App Name Title -->
+<h1 class="font-headline-xl-mobile md:font-headline-xl text-headline-xl-mobile md:text-headline-xl text-on-surface font-extrabold tracking-tight">
+      Patungan
+    </h1>
+<!-- Core Tagline -->
+<p class="font-body-lg text-body-lg text-on-surface-variant font-medium mt-space-xs">
+      Biar adil, nggak ribet.
+    </p>
+<!-- Social Comfort Highlight Badge -->
+<div class="mt-space-md inline-flex items-center gap-1.5 px-3 py-1 bg-surface-container-low rounded-full border border-surface-container">
+<span class="material-symbols-outlined text-primary text-[16px]" style="font-variation-settings: 'FILL' 1;">payments</span>
+<span class="font-label-sm text-label-sm text-on-primary-container font-semibold">Bagi tagihan tanpa rasa canggung</span>
+</div>
+</main>
+<!-- Interactive Loading & Footer Information -->
+<footer class="relative z-10 w-full max-w-sm px-margin pb-8 flex flex-col items-center text-center">
+<!-- Animated Loading Dots and Progress Cue -->
+<div class="flex flex-col items-center mb-space-lg">
+<div class="flex items-center space-x-1.5 mb-2.5">
+<div class="w-2 h-2 rounded-full bg-primary-container dot-1"></div>
+<div class="w-2 h-2 rounded-full bg-primary dot-2"></div>
+<div class="w-2 h-2 rounded-full bg-secondary-container dot-3"></div>
+</div>
+<p class="font-body-sm text-body-sm text-outline tracking-normal">
+        Memuat pengalaman berbagi yang adil...
+      </p>
+</div>
+<!-- Version & Proud Label -->
+<div class="flex flex-col items-center gap-1">
+<span class="font-label-md text-label-md text-on-surface-variant font-medium">
+        v2.4.0 · Karya Anak Bangsa
+      </span>
+<div class="flex items-center gap-1 text-outline">
+<span class="material-symbols-outlined text-[14px]">lock</span>
+<span class="font-label-sm text-label-sm">Standard Standar Keuangan ISO/IEC 27001</span>
+</div>
+</div>
+</footer>
+<!-- Subtle Micro-interaction script -->
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+      // Gentle ready pulse
+      const logoBox = document.querySelector('.group');
+      if (logoBox) {
+        logoBox.classList.add('transition-all', 'duration-700', 'ease-out');
+        setTimeout(() => {
+          logoBox.style.transform = 'translateY(0)';
+        }, 100);
+      }
+    });
+  </script>
+</body></html>
