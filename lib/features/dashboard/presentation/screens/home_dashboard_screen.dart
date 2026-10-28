@@ -7,6 +7,7 @@ import '../../../../shared/widgets/balance_card.dart';
 import '../../../../shared/widgets/group_card.dart';
 import '../../../../shared/widgets/custom_button.dart';
 import '../../../auth/presentation/bloc/auth_bloc.dart';
+import '../../../groups/domain/models/group_model.dart';
 import '../../../groups/presentation/bloc/group_bloc.dart';
 import '../../../notifications/data/notification_repository.dart';
 
@@ -24,6 +25,67 @@ class _HomeDashboardScreenState extends State<HomeDashboardScreen> {
   void initState() {
     super.initState();
     context.read<GroupBloc>().add(LoadGroupsEvent());
+  }
+
+  Future<void> _confirmDeleteGroup(BuildContext context, GroupModel group) async {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
+        title: Row(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color: isDark ? const Color(0xFF4A1818) : AppColors.errorContainer,
+                shape: BoxShape.circle,
+              ),
+              child: Icon(
+                Icons.delete_outline_rounded,
+                color: isDark ? const Color(0xFFFFB4AB) : AppColors.error,
+                size: 22,
+              ),
+            ),
+            const SizedBox(width: 12),
+            const Text('Hapus Grup?'),
+          ],
+        ),
+        content: Text(
+          'Apakah Anda yakin ingin menghapus grup "${group.name}"? Semua data pengeluaran dan anggota dalam grup ini akan dihapus permanen.',
+          style: AppText.bodyMedium,
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx, false),
+            child: Text(
+              'Batal',
+              style: AppText.labelLarge.copyWith(color: AppColors.onSurfaceVariant),
+            ),
+          ),
+          FilledButton(
+            style: FilledButton.styleFrom(
+              backgroundColor: AppColors.error,
+              foregroundColor: Colors.white,
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+            ),
+            onPressed: () => Navigator.pop(ctx, true),
+            child: const Text('Hapus'),
+          ),
+        ],
+      ),
+    );
+
+    if (confirmed == true && mounted) {
+      context.read<GroupBloc>().add(DeleteGroupEvent(group.id));
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Grup "${group.name}" berhasil dihapus'),
+          behavior: SnackBarBehavior.floating,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        ),
+      );
+    }
   }
 
   @override
@@ -318,6 +380,40 @@ class _HomeDashboardScreenState extends State<HomeDashboardScreen> {
                     }
 
                     if (state is GroupLoaded) {
+                      if (state.groups.isEmpty) {
+                        return Container(
+                          padding: const EdgeInsets.all(24),
+                          margin: const EdgeInsets.only(bottom: 12),
+                          decoration: BoxDecoration(
+                            color: palette.card,
+                            borderRadius: BorderRadius.circular(20),
+                            border: Border.all(color: palette.cardBorder, width: 1.2),
+                          ),
+                          child: Center(
+                            child: Column(
+                              children: [
+                                Icon(Icons.group_off_outlined, size: 48, color: palette.outline),
+                                const SizedBox(height: 12),
+                                Text(
+                                  'Belum ada grup aktif',
+                                  style: AppText.headlineSm.copyWith(
+                                    fontWeight: FontWeight.bold,
+                                    color: palette.onSurface,
+                                    fontSize: 16,
+                                  ),
+                                ),
+                                const SizedBox(height: 4),
+                                Text(
+                                  'Buat grup baru untuk mulai patungan bersama teman',
+                                  style: AppText.bodySm.copyWith(color: palette.onSurfaceVariant),
+                                  textAlign: TextAlign.center,
+                                ),
+                              ],
+                            ),
+                          ),
+                        );
+                      }
+
                       return Column(
                         children: state.groups.map((g) {
                           return GroupCard(
@@ -332,6 +428,7 @@ class _HomeDashboardScreenState extends State<HomeDashboardScreen> {
                                 arguments: g,
                               );
                             },
+                            onDelete: () => _confirmDeleteGroup(context, g),
                           );
                         }).toList(),
                       );

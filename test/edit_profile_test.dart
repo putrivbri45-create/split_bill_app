@@ -71,6 +71,8 @@ class MockGroupRepository implements GroupRepository {
   }) async => throw UnimplementedError();
   @override
   Future<void> addMember(String groupId, GroupMemberModel member) async {}
+  @override
+  Future<void> deleteGroup(String id) async {}
 }
 
 void main() {

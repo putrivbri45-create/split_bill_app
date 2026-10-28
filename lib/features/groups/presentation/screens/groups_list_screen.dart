@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../config/theme.dart';
 import '../../../../config/routes.dart';
 import '../../../../shared/widgets/group_card.dart';
+import '../../domain/models/group_model.dart';
 import '../bloc/group_bloc.dart';
 
 class GroupsListScreen extends StatefulWidget {
@@ -15,6 +16,67 @@ class GroupsListScreen extends StatefulWidget {
 class _GroupsListScreenState extends State<GroupsListScreen> {
   String _selectedCategory = 'Semua';
   final List<String> _categories = ['Semua', 'Makanan', 'Liburan', 'Rumah Tangga', 'Kantor'];
+
+  Future<void> _confirmDeleteGroup(BuildContext context, GroupModel group) async {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
+        title: Row(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color: isDark ? const Color(0xFF4A1818) : AppColors.errorContainer,
+                shape: BoxShape.circle,
+              ),
+              child: Icon(
+                Icons.delete_outline_rounded,
+                color: isDark ? const Color(0xFFFFB4AB) : AppColors.error,
+                size: 22,
+              ),
+            ),
+            const SizedBox(width: 12),
+            const Text('Hapus Grup?'),
+          ],
+        ),
+        content: Text(
+          'Apakah Anda yakin ingin menghapus grup "${group.name}"? Semua data pengeluaran dan anggota dalam grup ini akan dihapus permanen.',
+          style: AppText.bodyMedium,
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx, false),
+            child: Text(
+              'Batal',
+              style: AppText.labelLarge.copyWith(color: AppColors.onSurfaceVariant),
+            ),
+          ),
+          FilledButton(
+            style: FilledButton.styleFrom(
+              backgroundColor: AppColors.error,
+              foregroundColor: Colors.white,
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+            ),
+            onPressed: () => Navigator.pop(ctx, true),
+            child: const Text('Hapus'),
+          ),
+        ],
+      ),
+    );
+
+    if (confirmed == true && mounted) {
+      context.read<GroupBloc>().add(DeleteGroupEvent(group.id));
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Grup "${group.name}" berhasil dihapus'),
+          behavior: SnackBarBehavior.floating,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        ),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -116,6 +178,7 @@ class _GroupsListScreenState extends State<GroupsListScreen> {
                               arguments: g,
                             );
                           },
+                          onDelete: () => _confirmDeleteGroup(context, g),
                         );
                       },
                     );

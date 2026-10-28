@@ -40,6 +40,13 @@ class SelectGroupEvent extends GroupEvent {
   List<Object?> get props => [groupId];
 }
 
+class DeleteGroupEvent extends GroupEvent {
+  final String groupId;
+  const DeleteGroupEvent(this.groupId);
+  @override
+  List<Object?> get props => [groupId];
+}
+
 // STATES
 abstract class GroupState extends Equatable {
   const GroupState();
@@ -92,6 +99,7 @@ class GroupBloc extends Bloc<GroupEvent, GroupState> {
     on<LoadGroupsEvent>(_onLoadGroups);
     on<CreateGroupEvent>(_onCreateGroup);
     on<SelectGroupEvent>(_onSelectGroup);
+    on<DeleteGroupEvent>(_onDeleteGroup);
   }
 
   Future<void> _onLoadGroups(LoadGroupsEvent event, Emitter<GroupState> emit) async {
@@ -131,6 +139,23 @@ class GroupBloc extends Bloc<GroupEvent, GroupState> {
         orElse: () => currentState.groups.first,
       );
       emit(currentState.copyWith(selectedGroup: group));
+    }
+  }
+
+  Future<void> _onDeleteGroup(DeleteGroupEvent event, Emitter<GroupState> emit) async {
+    try {
+      await groupRepository.deleteGroup(event.groupId);
+      if (state is GroupLoaded) {
+        final currentGroups = (state as GroupLoaded).groups;
+        final updated = currentGroups.where((g) => g.id != event.groupId).toList();
+        final currentSelected = (state as GroupLoaded).selectedGroup;
+        final newSelected = currentSelected?.id == event.groupId ? null : currentSelected;
+        emit(GroupLoaded(groups: updated, selectedGroup: newSelected));
+      } else {
+        add(LoadGroupsEvent());
+      }
+    } catch (e) {
+      emit(GroupError('Gagal menghapus grup: ${e.toString()}'));
     }
   }
 }

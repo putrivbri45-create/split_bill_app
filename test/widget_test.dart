@@ -106,4 +106,33 @@ void main() {
     expect(find.text('Rp150.000 harus diterima'), findsOneWidget);
     expect(find.textContaining('2 anggota'), findsOneWidget);
   });
+
+  testWidgets('GroupCard renders delete button and responds to onDelete tap', (WidgetTester tester) async {
+    final mockGroup = GroupModel(
+      id: 'grp-test',
+      name: 'Liburan Bali 2026',
+      description: 'Trip akhir pekan',
+      category: 'Liburan',
+      createdBy: 'user-1',
+      createdAt: DateTime.now(),
+      memberCount: 2,
+      members: const [],
+    );
+
+    bool deleted = false;
+
+    await tester.pumpWidget(
+      createTestWidget(
+        GroupCard(
+          group: mockGroup,
+          onTap: () {},
+          onDelete: () => deleted = true,
+        ),
+      ),
+    );
+
+    expect(find.byIcon(Icons.delete_outline_rounded), findsOneWidget);
+    await tester.tap(find.byIcon(Icons.delete_outline_rounded));
+    expect(deleted, isTrue);
+  });
 }

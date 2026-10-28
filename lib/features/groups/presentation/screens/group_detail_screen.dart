@@ -6,6 +6,7 @@ import '../../../../config/routes.dart';
 import '../../../../core/utils/currency_formatter.dart';
 import '../../../../shared/widgets/expense_card.dart';
 import '../../../expenses/presentation/bloc/expense_bloc.dart';
+import '../bloc/group_bloc.dart';
 import '../../domain/models/group_model.dart';
 
 class GroupDetailScreen extends StatefulWidget {
@@ -24,6 +25,68 @@ class _GroupDetailScreenState extends State<GroupDetailScreen> {
   void initState() {
     super.initState();
     context.read<ExpenseBloc>().add(LoadGroupExpensesEvent(widget.group.id));
+  }
+
+  Future<void> _confirmDeleteGroup(BuildContext context) async {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
+        title: Row(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color: isDark ? const Color(0xFF4A1818) : AppColors.errorContainer,
+                shape: BoxShape.circle,
+              ),
+              child: Icon(
+                Icons.delete_outline_rounded,
+                color: isDark ? const Color(0xFFFFB4AB) : AppColors.error,
+                size: 22,
+              ),
+            ),
+            const SizedBox(width: 12),
+            const Text('Hapus Grup?'),
+          ],
+        ),
+        content: Text(
+          'Apakah Anda yakin ingin menghapus grup "${widget.group.name}"? Semua data pengeluaran dan anggota dalam grup ini akan dihapus permanen.',
+          style: AppText.bodyMedium,
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx, false),
+            child: Text(
+              'Batal',
+              style: AppText.labelLarge.copyWith(color: AppColors.onSurfaceVariant),
+            ),
+          ),
+          FilledButton(
+            style: FilledButton.styleFrom(
+              backgroundColor: AppColors.error,
+              foregroundColor: Colors.white,
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+            ),
+            onPressed: () => Navigator.pop(ctx, true),
+            child: const Text('Hapus'),
+          ),
+        ],
+      ),
+    );
+
+    if (confirmed == true && mounted) {
+      context.read<GroupBloc>().add(DeleteGroupEvent(widget.group.id));
+      Navigator.pop(context);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Grup "${widget.group.name}" berhasil dihapus'),
+          behavior: SnackBarBehavior.floating,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        ),
+      );
+    }
   }
 
   @override
@@ -87,13 +150,36 @@ class _GroupDetailScreenState extends State<GroupDetailScreen> {
               );
             },
           ),
-          IconButton(
+          PopupMenuButton<String>(
             icon: const Icon(Icons.more_vert_rounded),
-            onPressed: () {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text('Detail grup "${group.name}"')),
-              );
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+            onSelected: (value) {
+              if (value == 'delete') {
+                _confirmDeleteGroup(context);
+              }
             },
+            itemBuilder: (context) => [
+              PopupMenuItem(
+                value: 'delete',
+                child: Row(
+                  children: [
+                    Icon(
+                      Icons.delete_outline_rounded,
+                      color: isDark ? const Color(0xFFFFB4AB) : AppColors.error,
+                      size: 20,
+                    ),
+                    const SizedBox(width: 10),
+                    Text(
+                      'Hapus Grup',
+                      style: AppText.labelLarge.copyWith(
+                        color: isDark ? const Color(0xFFFFB4AB) : AppColors.error,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
           ),
         ],
       ),

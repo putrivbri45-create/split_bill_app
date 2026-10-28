@@ -14,6 +14,7 @@ abstract class GroupRepository {
     required List<GroupMemberModel> members,
   });
   Future<void> addMember(String groupId, GroupMemberModel member);
+  Future<void> deleteGroup(String id);
 }
 
 class GroupRepositoryImpl implements GroupRepository {
@@ -282,6 +283,17 @@ class GroupRepositoryImpl implements GroupRepository {
         members: updatedList,
         memberCount: updatedList.length,
       );
+    }
+  }
+
+  @override
+  Future<void> deleteGroup(String id) async {
+    _mockGroups.removeWhere((g) => g.id == id);
+
+    if (_db.isConfigured) {
+      try {
+        await _db.executeParams("DELETE FROM groups WHERE id = \$1;", [id]);
+      } catch (_) {}
     }
   }
 }

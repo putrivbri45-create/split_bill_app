@@ -6,11 +6,13 @@ import '../../features/groups/domain/models/group_model.dart';
 class GroupCard extends StatelessWidget {
   final GroupModel group;
   final VoidCallback onTap;
+  final VoidCallback? onDelete;
 
   const GroupCard({
     super.key,
     required this.group,
     required this.onTap,
+    this.onDelete,
   });
 
   @override
@@ -155,6 +157,31 @@ class GroupCard extends StatelessWidget {
                 ],
               ),
             ),
+            if (onDelete != null) ...[
+              const SizedBox(width: 8),
+              Material(
+                color: Colors.transparent,
+                child: InkWell(
+                  onTap: onDelete,
+                  borderRadius: BorderRadius.circular(12),
+                  child: Container(
+                    padding: const EdgeInsets.all(8),
+                    decoration: BoxDecoration(
+                      color: isDark
+                          ? const Color(0xFF3B1E1E).withOpacity(0.7)
+                          : const Color(0xFFFFECEB),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Icon(
+                      Icons.delete_outline_rounded,
+                      color: isDark ? const Color(0xFFFFB4AB) : AppColors.error,
+                      size: 20,
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(width: 4),
+            ],
             Icon(
               Icons.chevron_right_rounded,
               color: palette.outlineVariant,
